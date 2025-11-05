@@ -49,16 +49,14 @@
     <keyword>routing</keyword>
     <abstract>
       <t>
-	Deep space communications involve long delays (e.g., Earth to
-	Mars is 4-24 minutes) and intermittent communications, because
-	of orbital dynamics. The IP protocol stack used on Earth's Internet is
-	based on assumptions of shorter delays and mostly uninterrupted
+	The IP protocol stacks used on Earth's Internet typically
+	are configured based on assumptions of short delays and mostly uninterrupted
 	communications. This document describes the architecture of the
 	IP protocol stack tailored for its use in deep space. It
 	involves buffering IP packets in IP forwarders facing
 	intermittent links
-	and adjusting transport protocol configuration and application
-	protocol timers. This architecture applies to the Moon, Mars, or
+	and adjusting transport protocol configurations and application
+	protocol timers. This architecture applies to the Moon, Mars, and
 	general interplanetary networking.
       </t>
     </abstract>
@@ -66,73 +64,77 @@
   <middle>
     <section anchor="intro">
         <name>Introduction</name>
-      <t>Deep space communications involve long delays (e.g., Earth to
-      Mars is 4-20 minutes) and intermittent communications, because
-      of orbital dynamics. Up to now, communications have been done on
-      a layer-2 point-to-point basis, with sometimes the use of
+      <t>
+	Deep space communications involve long delays and intermittent connectivity due to the distances and orbital motion involved.  For instance,
+            Earth to Mars transmissions vary 4-24 minutes, and are unavailable periodically due to rotation, conjunctions, and other conditions.
+      </t>
+      <t>Deep space communications 
+      have traditionally been done on
+      a layer-2 point-to-point basis, sometimes uing
       relays, but no layer-3 networking has been in routine use.
       <xref target="RFC4838"/> reports an assessment done around 25 years
       ago concluding that the IP protocol stack was not suitable for
       deep space networking. However, some things have changed since
-      that time, as there has been evolution in Internet transport and
+      that time, as there has been evolution in multiple areas including Internet transport and
       security protocols (e.g. QUIC), routing (e.g. SDN), and forwarding
-      technology (e.g. MPLS and Segment Routing).
+      technology (e.g. MPLS and Segment Routing), compression (e.g. SCHC), network management, and applications (e.g. HTTP and CoAP).
       </t>
       <t>Currently, space agencies have published plans that include deploying IP
-      networks on celestial bodies, such as the Moon <xref target="ioag"/> or Mars<xref target="ioag-mars"/>, on the
-      surface and in orbital vicinity, including layer 2 technologies such
+      networks on celestial bodies, such as the Moon <xref target="ioag"/> and Mars <xref target="ioag-mars"/>, both on the
+      surfaces and orbiting constellations, including link layer technologies such
       as Wi-Fi or 5G. On the surface, the plans involve dense
-      networking around facilities and habitats.</t>
-      <t>New mission concepts are also including clusters of multiple networked nodes co-located at Lagrange points.</t>
+      networking around facilities and habitats.  New mission concepts are also including clusters of multiple networked nodes co-located at Lagrange points.</t>
       <t>
-	A previous document <xref target="I-D.many-deepspace-ip-assessment"/> revisited the
-	initial assessment of not using IP and concluded that the IP
-	stack is viable in deep space, given the IP stack evolution
-	that happened since the original evaluation.</t>
-      <t>This document
-	defines an architecture to use IP in deep space networking. IP
-	in deep space means running IP over deep space layer-2 links,
-	a reliable transport over IP, applications protocols over that
-	transport, and applying proper routing, security, and network
-	management on that IP network. Reusing the whole IP stack in
-	deep space enables the reuse of all protocols, tools, and
-	software currently used on the Internet. However, as one might
-	already argue, many components of the IP stack cannot be used
-	as is and therefore requires careful configuration and
-	deployment considerations that are discussed in this document.
+ Given the evolution of modern IP application protocol stacks and the new needs of deep space missions, this document describes an "architecture" for the use of IP in deep space, meeting needs described in <xref target="I-D.many-tiptop-usecase"/>.
+ This includes:
       </t>
-      <t>
-	Since the Moon is a few light seconds away from Earth, it is
-	possible to configure and run various IP-based protocols and
-	applications to make it "work". Mars with a much longer delay
-	is more difficult. This
-	framework would also work for longer delays, such as reaching
-	Jupiter or the whole Solar System Internet (SSI), but it is
-	not specifically discussed. This document uses "deep space"
-	extensively as opposed to "space" which often includes
-	earth-orbiting communications, which are not covered in this
-	document. Even if the definition of deep space per the ITU
-	does not include the Moon, this document applies to IP
-	networks on the Moon.
-      </t>
-      <t>This framework proposes to use
-      IP in deep space, based on queueing outbound packets for upcoming
+      <ul>
+        <li>running IP over deep space layer-2 links,</li>
+        <li>buffering of IP packets, when needed,</li>
+        <li>IP addressing and routing,</li>
+        <li>transport protocol configuration,</li>
+        <li>application protocols,</li>
+        <li>and other network services, including network
+            management of deep space IP networks.</li>
+      </ul>
+      <t>An aspect of this framework is the potential for queueing outbound packets for upcoming
       contact opportunities.
       In this case, the IP layer has to deal with the fact that
       a next-hop may not be currently reachable and that IP packets
       could be buffered for an unusual amount of time, such as minutes,
-      hours, or days, in the forwarding device waiting for reachability back
-      because of a new
+      hours, or days in the forwarding device waiting for next-hop reachability or a
       link-up  opportunity. The transport layer should be able to work
       with long and variable delays, including intermittent
       communications. The application protocols and the applications
       themselves should be properly set to wait a longer time than on
-      the current Internet to receive a response to a query. Finally, all network services such as routing, security, naming, and network management should also be adapted to this new context. This document is structured around these layers.</t>
-      <t>The key characteristics of space communications and networking, its use case and its requirements are discussed in another document<xref target="I-D.many-tiptop-usecase"/>.</t>
+      the current Internet to receive a response to a query. Finally, all network services such as routing, security, naming, and network management should also be adapted to this new context. This document is structured around these layers.  General architecture concerns are described along with suitable ways to address them.  Separate documents cover the details of configuring specific protocols, e.g. QUIC, in accordance with this framework.</t>
+      <t>
+    Applying the IP stack and its mature family of standards in
+	deep space enables the reuse of many protocols, tools, and
+	software currently used on the Internet. However,
+	many components of the IP stack cannot be used
+	as-is and require careful configuration and
+	deployment considerations that are discussed in this document.
+      </t>
+      <t>
+	Since the Moon is within a few light seconds away from Earth, it is
+	possible to configure and run typical Internet protocols and
+	applications to basically "work", however, Mars with a much longer delay
+	is more difficult. The framework in this document covers both,
+	and would also work for longer delays, such as reaching
+    Jupiter or the whole Solar System.  The focus is on the Moon and Mars because those are where significant numbers of relevant missions are being developed presently.</t>
+      <t>This document uses "deep space"
+	extensively as opposed to "space", as that more generally includes other topics such as
+      terrestrial satellite access, earth-orbiting, and near-Earth missions, which are not covered in this
+      document, and subject of other RFCs (e.g. <xref target="RFC2488"/>, <xref target="RFC2760"/>, <xref target="RFC3135"/>, <xref target="RFC9717"/>).
+      The scope of "deep space" in this document includes the Moon, although this is not strictly within the ITU's definition of the term.
+      </t>
+
+      <t>The key characteristics of space communications and networking, the relevant use case aspects and requirements are discussed in <xref target="I-D.many-tiptop-usecase"/>.</t>
       <section>
         <name>Document and Discussion Location</name>
         <t>The source of this document is located at https://github.com/marcblanchet/draft-deepspace-ip-architecture. Comments or changes are welcomed using a PR or an issue.</t>
-        <t>This subject should be discussed on the deepspace@ietf.org mailing list.</t>
+        <t>This subject should be discussed on the deepspace@ietf.org mailing list of the Taking IP To Other Planets (TIPTOP) working group.</t>
       </section>
     </section>
     <section anchor="layer2">
@@ -625,6 +627,9 @@ incorporate/enable in future interplanetary transport stacks.
         <name>Informative References</name>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.768.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.1157.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2488.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2760.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3135.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4271.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4340.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4655.xml"/>
