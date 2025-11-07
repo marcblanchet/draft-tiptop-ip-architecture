@@ -133,7 +133,7 @@
       <t>The key characteristics of space communications and networking, the relevant use case aspects and requirements are discussed in <xref target="I-D.many-tiptop-usecase"/>.</t>
       <section>
         <name>Document and Discussion Location</name>
-        <t>The source of this document is located at https://github.com/marcblanchet/draft-deepspace-ip-architecture. Comments or changes are welcomed using a PR or an issue.</t>
+        <t>The source of this document is located at https://github.com/marcblanchet/draft-tiptop-ip-architecture. Comments or changes are welcomed using a PR or an issue.</t>
         <t>This subject should be discussed on the deepspace@ietf.org mailing list of the Taking IP To Other Planets (TIPTOP) working group.</t>
       </section>
     </section>
