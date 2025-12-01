@@ -513,10 +513,13 @@ incorporate/enable in future interplanetary transport stacks.
       </section>
       <section>
         <name>Other Transports</name>
-        <t>Other transports such as TCP <xref target="RFC9293"/>, SCTP
+	<t>The Space Communications Protocol Specification (SCPS) Transport Protocol (SCPS-TP) <xref target="SCPS-TP"/> is a set of TCP options that is specifically designed to extend TCP for space use.  It has been tested in simulations of Earth-Mars links.  SCPS-TP may be a useful transport protocol for some applications to consider in the future.  Primarily, to-date, the implementations and usage have been in transport gateway / proxy scenarios that do not match the intended IP architecture of this document, and code is not widely available compared to other transport options.</t>
+	<t>Other transports such as TCP <xref target="RFC9293"/>, SCTP
 	<xref target="RFC9260"/>, DCCP <xref target="RFC4340"/> and others were not investigated for their suitability in space.</t>
       </section>
     </section>
+    <section anchor="applications">
+      <name>Applications</name>
     <section anchor="http-section">
       <name>HTTP</name>
       <t>HTTP by itself has no notion of time. An HTTP request and
@@ -559,6 +562,7 @@ incorporate/enable in future interplanetary transport stacks.
           <name>CoAP</name>
           <t>The Constrained Application Protocol (CoAP)<xref target="RFC7252"/> is a specialized web transfer protocol for use with constrained nodes and constrained networks, therefore a candidate for an application protocol for space, similar to HTTP. If considered, proper use of its underlying transport and timers should be looked at.</t>
       </section>
+    </section>
     </section>
     <section>
       <name>Network services</name>
@@ -665,10 +669,19 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>IP OVER CCSDS SPACE LINKS, Blue Book 702</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2012" month="September"/>
           </front>
+        </reference>
+        <reference anchor="SCPS-TP" target="">
+	  <front>
+            <title>Space Communications Protocol Specification (SCPS) - Transport Protocol (SCPS-TP), Blue Book 714.0-B-2</title>
+            <author>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
+            </author>
+            <date year="2006" month="October"/>
+	  </front>
         </reference>
         <reference anchor="SANAIPEHeaderRegistry" target="https://sanaregistry.org/r/ipe_header/">
           <front>
@@ -680,7 +693,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>AOS Space Data Link Protocol, Blue Book 732.0-B-4</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2021" month="October"/>
           </front>
@@ -689,7 +702,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>TM Space Data Link Protocol, Blue Book 132.0-B-3</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2021" month="October"/>
           </front>
@@ -698,7 +711,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>TC Space Data Link Protocol, Blue Book 232.0-B-4</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2021" month="October"/>
           </front>
@@ -707,7 +720,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>Proximity-1 Space Link Protocol—Data Link Layer, Blue Book 211.0-B-6</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2020" month="July"/>
           </front>
@@ -716,7 +729,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>Unified Space Data Link Protocol, Blue Book 732.1-B-2</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2021" month="October"/>
           </front>
