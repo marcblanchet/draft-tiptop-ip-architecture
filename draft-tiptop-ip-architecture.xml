@@ -137,6 +137,22 @@
         <t>This subject should be discussed on the deepspace@ietf.org mailing list of the Taking IP To Other Planets (TIPTOP) working group.</t>
       </section>
     </section>
+    <section anchor="overview">
+      <name>Architecture Overview</name>
+      <t>This section provides a short overview of the architecture for IP in deep space.</t>
+      <t>One of the key reasons to use IP is to maintain compatibility and potential smooth interoperability with other IP networks that exist terresterially and within space vehicle onboard networks.  While some nodes will require specific deep space protocol support, many nodes within the network can have traditional unmodified IP stacks that remain configured as if for typical Internet uses.</t>
+      <t>Within an end-to-end deep space application data flow, several different types of nodes can be involved:</t>
+      <ul>
+        <li><t>Unmodified / Internet nodes - These consists of existing "untuned" IP stacks (not necessarily modified in any way for deep space use versys typical Internet use).  These can exist within planetary surface networks and spacecraft onboard networks, for example.  For instance, these may be the majority of nodes within terrestrial ground systems, mission operations centers, ground stations, and terresterial backbone networks.  Given use of 3GPP architecture in some agency plans, these nodes may be present within onboard or surface core networks.</t></li>
+	<li><t>TIPTOP end-hosts - These nodes include specially tuned transport/application protocol parameters in order to function in deep space scenarios.  Within the network, these specially tuned nodes need only exist at application endpoints (or proxies).</t></li>
+	<li><t>TIPTOP forwarding nodes - These are like typical IP forwarding nodes, except include queuing capabilities for IP packets that go beyond normal Internet use, as described more in <xref target="ip"/>.  Within the total deep space network, these need only exist at transition points between well-connected regimes and the hops through deep space communication system links.  For instance, these may be at the edge of onboard networks or ground station networks.</t></li>
+        <li><t>TIPTOP-full nodes - These nodes combine aspects of TIPTOP end hosts and TIPTOP forwarding nodes.  This combination may be useful in cases such as small spacecraft or other vehicles that consist of only a single node that must roam autonomously rather than functioning within a well-connected onboard or surface network regime.</t></li>
+	<li><t>Scheduling/orchestration systems - These systems may typically operate out-of-band from application data flows, but are responsible for creating and distributing coordinated network plans based on projected application needs (e.g. to support planned mission operations schedules).  These may only exist within terresterial or other planetary core networks, but are essential, especially in early growth of deep space networks, in order to provide knowledge of expected connectivity schedules and associated stack parameters.</t></li>
+      </ul>
+      <t>An example end-to-end command application flow might pass through many nodes, starting within a mission operations center (MOC) at (1) a TIPTOP end-host running command workstation software, and then traversing (2) an unmodified LAN within the MOC, which routes the command packet via (3) an unmodified WAN or VPN connection to a communication service provider (CSP) network.  Within the CSP network, there may be (4) unmodified IP forwarding in other WAN, VPN, and LAN nodes, and (5) a TIPTOP forwarder that queues packets and routes according to schedule via (6) unmodified relay or direct communications services towards the destination spacecraft node.  At the destination spacecraft/vehicle, there may be (7) a TIPTOP forwarder, (8) an unmodified onboard network, and (9) a TIPTOP end-host.</t>
+      <t>Within this example command path, there are 2 TIPTOP end hosts, 2 TIPTOP forwarders, and 5+ unmodified typical Internet stack nodes (since multiple hops can be involved in the several LAN and WAN traversals).  This deep space IP architecture is incrementally deployable.</t>
+      <t>Making the end-to-end example command data flow possible, an orchestration system on Earth can use knowledge of the spacecraft mission and its commanding needs in order to ensure that at proper times there are scheduled communication system resources (antennas, modems, etc.) that are physically pointed, tracking, and otherwise configured to close a forward link to the spacecraft at the required data rate.  The orchestration system can also set scheduled routing table entries for the relevant nodes within the path.</t>
+    </section>
     <section anchor="layer2">
       <name>Layer 2 in Deep Space</name>
       <section anchor="layer2surface">
@@ -513,10 +529,13 @@ incorporate/enable in future interplanetary transport stacks.
       </section>
       <section>
         <name>Other Transports</name>
-        <t>Other transports such as TCP <xref target="RFC9293"/>, SCTP
+	<t>The Space Communications Protocol Specification (SCPS) Transport Protocol (SCPS-TP) <xref target="SCPS-TP"/> is a set of TCP options that is specifically designed to extend TCP for space use.  It has been tested in simulations of Earth-Mars links.  SCPS-TP may be a useful transport protocol for some applications to consider in the future.  Primarily, to-date, the implementations and usage have been in transport gateway / proxy scenarios that do not match the intended IP architecture of this document, and code is not widely available compared to other transport options.</t>
+	<t>Other transports such as TCP <xref target="RFC9293"/>, SCTP
 	<xref target="RFC9260"/>, DCCP <xref target="RFC4340"/> and others were not investigated for their suitability in space.</t>
       </section>
     </section>
+    <section anchor="applications">
+      <name>Applications</name>
     <section anchor="http-section">
       <name>HTTP</name>
       <t>HTTP by itself has no notion of time. An HTTP request and
@@ -559,6 +578,7 @@ incorporate/enable in future interplanetary transport stacks.
           <name>CoAP</name>
           <t>The Constrained Application Protocol (CoAP)<xref target="RFC7252"/> is a specialized web transfer protocol for use with constrained nodes and constrained networks, therefore a candidate for an application protocol for space, similar to HTTP. If considered, proper use of its underlying transport and timers should be looked at.</t>
       </section>
+    </section>
     </section>
     <section>
       <name>Network services</name>
@@ -665,10 +685,19 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>IP OVER CCSDS SPACE LINKS, Blue Book 702</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2012" month="September"/>
           </front>
+        </reference>
+        <reference anchor="SCPS-TP" target="">
+	  <front>
+            <title>Space Communications Protocol Specification (SCPS) - Transport Protocol (SCPS-TP), Blue Book 714.0-B-2</title>
+            <author>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
+            </author>
+            <date year="2006" month="October"/>
+	  </front>
         </reference>
         <reference anchor="SANAIPEHeaderRegistry" target="https://sanaregistry.org/r/ipe_header/">
           <front>
@@ -680,7 +709,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>AOS Space Data Link Protocol, Blue Book 732.0-B-4</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2021" month="October"/>
           </front>
@@ -689,7 +718,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>TM Space Data Link Protocol, Blue Book 132.0-B-3</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2021" month="October"/>
           </front>
@@ -698,7 +727,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>TC Space Data Link Protocol, Blue Book 232.0-B-4</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2021" month="October"/>
           </front>
@@ -707,7 +736,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>Proximity-1 Space Link Protocol—Data Link Layer, Blue Book 211.0-B-6</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2020" month="July"/>
           </front>
@@ -716,7 +745,7 @@ incorporate/enable in future interplanetary transport stacks.
           <front>
             <title>Unified Space Data Link Protocol, Blue Book 732.1-B-2</title>
             <author>
-              <organization>Consultative Committee on Space Data Systems(CCSDS)</organization>
+              <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2021" month="October"/>
           </front>
