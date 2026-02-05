@@ -536,6 +536,7 @@ incorporate/enable in future interplanetary transport stacks.
     </section>
     <section anchor="applications">
       <name>Applications</name>
+      <t>While many Web applications already use REST, operating them in deep space requires a concrete deployment and design model that differs from terrestrial assumptions. A functional deep-space Web system would consist of RESTful HTTP (or CoAP) services with explicitly configured timeouts, caching behavior, and asynchronous request handling. Application endpoints are designed to accept long request–response delays, return idempotent resources, and avoid chatty multi-RTT interactions. Content is aggressively pre-cached and replicated at planetary or orbital gateways so that most REST interactions are satisfied locally, while end-to-end exchanges tolerate hours or days of delay. In this model, a “Web app” is not an interactive browser session, but a set of asynchronous REST resources whose state can be fetched, updated, or synchronized opportunistically as connectivity becomes available. This section describes the specific protocol configurations and application patterns needed to adapt existing REST-based systems into such a deep-space-capable Web architecture.</t>
     <section anchor="http-section">
       <name>HTTP</name>
       <t>HTTP by itself has no notion of time. An HTTP request and
@@ -567,7 +568,7 @@ incorporate/enable in future interplanetary transport stacks.
       not be optimal, as multiple queries will be generated and
       therefore take multiple RTT before the whole page is received
       complete. This issue can be mitigated by using various
-      techniques such as Web Assembly <xref target="wasm"/> or
+      techniques such as
       pre-caching. Moreover, it could be possible to have simple HTML
       pages with no or very few references and no media content 
       that was not locally cached. An example would be a rover on Mars presenting an HTTP server with a base and bare HTML page to offer basic info on its status (maybe all in text) and some additional detailed pages, most likely also in base HTML text. However, it is foreseen that most applications based on QUIC-HTTP transport in deep space would be using REST or similar asynchronous patterns and not typical web browsing.</t>
@@ -576,7 +577,7 @@ incorporate/enable in future interplanetary transport stacks.
       
       <section>
           <name>CoAP</name>
-          <t>The Constrained Application Protocol (CoAP)<xref target="RFC7252"/> is a specialized web transfer protocol for use with constrained nodes and constrained networks, therefore a candidate for an application protocol for space, similar to HTTP. If considered, proper use of its underlying transport and timers should be looked at.</t>
+          <t>The Constrained Application Protocol (CoAP)<xref target="RFC7252"/> is a specialized web transfer protocol for use with constrained nodes and constrained networks, therefore a candidate for an application protocol for space, similar to HTTP. If considered, proper use of its underlying transport and timers should be looked at as discussed in <xref target="I-D.gomez-tiptop-coap"/>.</t>
       </section>
     </section>
     </section>
@@ -602,7 +603,7 @@ incorporate/enable in future interplanetary transport stacks.
 	  more complicated and does not bring any significant value
 	  compared to using the current domain tree.</t>
         <t>Care must be taken to manage key lifecycles and resource
-	record lifetimes. <xref target="I-D.many-dnsop-dns-isolated-networks"/> discusses the
+	record lifetimes. <xref target="I-D.many-tiptop-dns"/> discusses the
 	various methods and the naming hierarchy that should be used in space.</t>
       </section>
       <section>
@@ -679,7 +680,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-deepspace-ip-assessment.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-usecase.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-deepspace-quic-profile.xml"/>
-        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-dnsop-dns-isolated-networks.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.gomez-tiptop-coap.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-dns.xml"/>
         <reference anchor="IPoverCCSDSSpaceLinks" target="https://public.ccsds.org/Pubs/702x1b1c2.pdf">
           <front>
@@ -748,14 +749,6 @@ incorporate/enable in future interplanetary transport stacks.
               <organization>Consultative Committee on Space Data Systems (CCSDS)</organization>
             </author>
             <date year="2021" month="October"/>
-          </front>
-        </reference>
-        <reference anchor="wasm" target="https://github.com/webassembly/spec">
-          <front>
-            <title>WebAssembly Specifications</title>
-            <author>
-              <organization>World Wide Web Consortium(W3C)</organization>
-            </author>
           </front>
         </reference>
         <reference anchor="ioag" target="https://www.ioag.org/Public%20Documents/Lunar%20communications%20architecture%20study%20report%20FINAL%20v1.3.pdf">
