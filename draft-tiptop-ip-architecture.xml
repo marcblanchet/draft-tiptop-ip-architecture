@@ -179,10 +179,10 @@
 	and/or IPv6. While some may prefer one version or another,
 	there are important considerations that complicate
 	matters. Deep space links are very low bandwidth. The
-	additional overhead of an IPv6 packet will have a performance
-	impact that needs to be considered early in mission
-	planning. From a future-proofing perspective, IPv6 is to be
-	preferred.  Eventually, as technology evolves and the
+	additional overhead of an IPv6 packet will have a bandwidth
+	and performance impact that needs to be considered early in
+	mission planning. From a future-proofing perspective, IPv6 is
+	to be preferred.  Eventually, as technology evolves and the
 	bandwidth constraints are relieved, we would greatly prefer to
 	not have to retrofit existing, deployed spacecraft with
 	IPv6. Ultimately, however, the IETF does not have authority
@@ -274,27 +274,29 @@
       aggregation of routing prefixes. Aggregation of prefixes
       assigned to celestrial bodies would minimize the overhead
       incurred by relaying spacecraft, minimizing expensive hardware
-      requirements.  Thus, to help achieve maximum aggregation, the
-      address space for outer space should be managed by a Regional
-      Internet Registry (RIR) and blocks of address space should be
-      allocated for each celestial body of interest. Space service
-      providers should use prefixes assigned by this RIR. This is
-      discussed in more detail in <xref
+      requirements and would help minimize route flap.  Thus, to help
+      achieve maximum aggregation, the address space for outer space
+      should be managed by a Regional Internet Registry (RIR) and
+      blocks of address space should be allocated for each celestial
+      body of interest. Space service providers should use prefixes
+      assigned by this RIR. This is discussed in more detail in <xref
       target="I-D.li-tiptop-address-space"/>.
     </t>
       </section>
       <section title="Routing">
         <t>
-	Existing routing protocols require proof of
-	liveness between protocol partners, implemented through
-	the periodic exchange of packets between partners. This is
-	impractical on long-delay or intermittent links, so a PCE
+	Existing routing protocols require proof of liveness between
+	protocol partners, implemented through the periodic exchange
+	of packets between partners. This is impractical on long-delay
+	or intermittent links, so a Path Computation Engine (PCE)
 	<xref target="RFC4655"/> based approach seems appropriate for
-	those domains possibly supplemented by contact plan schedules<xref target="I-D.ietf-tvr-schedule-yang"/>. Interconnection between
+	those domains possibly supplemented by contact plan
+	schedules<xref
+	target="I-D.ietf-tvr-schedule-yang"/>. Interconnection between
 	domains can still be done with BGP <xref target="RFC4271"/>,
 	but long-delay or intermittent links should be
-	avoided. Domains straddling such links must provide
-	proxy advertisements for prefixes reachable across such links.
+	avoided. Domains straddling such links must provide proxy
+	advertisements for prefixes reachable across such links.
       </t>
         <t>
 	Optimal routing for domains with intermittent links is out of
