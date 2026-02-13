@@ -107,7 +107,7 @@
       with long and variable delays, including intermittent
       communications. The application protocols and the applications
       themselves should be properly set to wait a longer time than on
-      the current Internet to receive a response to a query. Finally, all network services such as routing, security, naming, and network management should also be adapted to this new context. This document is structured around these layers.  General architecture concerns are described along with suitable ways to address them.  Separate documents cover the details of configuring specific protocols, e.g. QUIC, in accordance with this framework.</t>
+      the current Internet to receive a response to a query. Finally, all network services such as routing, security, naming, and network management should also be adapted to this new context. This document is structured around these layers.  General architecture concerns are described along with suitable ways to address them.  Separate documents cover the details of configuring specific protocols, e.g. CoAP, DNS, QUIC, in accordance with this framework.</t>
       <t>
     Applying the IP stack and its mature family of standards in
 	deep space enables the reuse of many protocols, tools, and
@@ -332,8 +332,8 @@ multiple DNS queries and connection attempts for different addresses and
 address families returned.  Downsides to this in interplanetary applications
 might include (1) the additional load on interplanetary DNS (although solutions
 to this are avialable <xref target="I-D.many-tiptop-dns"/>), (2) unnecessary
-use of network capacity for paralel connection attempts (e.g. if 0-RTT data
-transmission is used), and (3) unnecessary additional transport state
+use of network capacity for parallel connection attempts,
+and (3) unnecessary additional transport state
 maintained for an extended period of time.  If applications for interplanetary
 use initially rely on either fixed IP addresses (instead of DNS names) or a
 single address family (e.g. IPv6), then there should be no downsides to
@@ -353,17 +353,15 @@ used to avoid connection initiation in some cases, e.g. by establishing state
 prior to launch and using those pre-established connections long-term.
 However, this will not be possible in all cases for all applications, if flows
 can't be planned pre-launch.  Due to the need to be robust to stale packets,
-errors, and denial of service attacks, historically, Internet transports have
+errors, and denial of service attacks, historically, Internet transports and security protocols have
 included handshaking
-state machines, such as 3-way and 4-way handshakes for connection establishment
-(the case can be even worse for some transport protocol and TLS combinations),
-although QUIC can established secured connections with only 1 round-trip time.
+state machines, such as 3-way and 4-way handshakes for connection establishment (needing 1.5 or 2 RTTs, if client authentication is needed and pre-shared keys are not available).
 Since the interplanetary round trip times may be larger than the duration of
 contact periods, these handshaking mechanisms are very inefficient.  Though
 they are tolerable in cases such as between Earth and lunar networks, they are
 stifling for Earth-Mars and other interplanetary network paths.  Transports,
 such as QUIC, that have the ability to resume based on shared state from prior
-application connections or to rapidly start transferring data ("0RTT") can be
+application connections or to rapidly start transferring data ("0-RTT") can be
 suitably efficient, once initial state is obtained; however, they still require
 a complete initial handshake with the full set of round trip times imposed.
 For interplanetary use, it may be beneficial to find ways to securely pre-set
@@ -495,7 +493,8 @@ incorporate/enable in future interplanetary transport stacks.
       <section anchor="udp">
         <name>UDP</name>
         <t>UDP <xref target="RFC768"/> has no notion of time and,
-	therefore can be used as-is in deep space. Hence, protocols using UDP transport can be used in space as-is, if they do not rely on time or can be configured with timeouts appropriate in deep space.</t>
+		therefore can be used as-is in deep space. Hence, protocols using UDP transport can be used in space as-is, if they do not rely on time or can be configured with timeouts appropriate in deep space.</t>
+	<t>The IETF has published UDP usage guidelines <xref target="RFC8085"/> that help to ensure applications using UDP behave in a "safe" way for the Internet.  These guidelines are also appropriate to consider for deep space usage of UDP, though some specific values (e.g. the 1 second initial latency estimate suggested) should be adjusted.</t>
       </section>
       <section anchor="quic-section">
         <name>QUIC</name>
@@ -570,7 +569,7 @@ incorporate/enable in future interplanetary transport stacks.
       techniques such as Web Assembly <xref target="wasm"/> or
       pre-caching. Moreover, it could be possible to have simple HTML
       pages with no or very few references and no media content 
-      that was not locally cached. An example would be a rover on Mars presenting an HTTP server with a base and bare HTML page to offer basic info on its status (maybe all in text) and some additional detailed pages, most likely also in base HTML text. However, it is foreseen that most applications based on QUIC-HTTP transport in deep space would be using REST or similar asynchronous patterns and not typical web browsing.</t>
+      that was not locally cached. An example would be a rover on Mars presenting an HTTP server with a base and bare HTML page to offer basic info on its status (maybe all in text) and some additional detailed pages, most likely also in base HTML text. However, it is foreseen that most applications based on HTTP3 transport in deep space would be using REST or similar asynchronous patterns and not typical web browsing.</t>
       <t>Caching should be used extensively on space networks to maximize local fetching. Preemptive caching by pre-populating caches with data that shall be used locally on the celestial body network shall be done as much as possible to provide better response time on the local celestial body network.</t>
       <t>QPACK <xref target="RFC9204"/> should be considered for higher bandwidth efficiency.</t>
       
@@ -609,7 +608,7 @@ incorporate/enable in future interplanetary transport stacks.
           <name>Network Management</name>
           <t>NETCONF <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/> shall be used with proper configuration
               values to avoid timeouts and appropriate transport. NETCONF
-              over QUIC transport <xref target="I-D.ietf-netconf-over-quic"/> or RESTCONF over HTTP over QUIC transport shall be configured with appropriate QUIC transport parameters as discussed in <xref target="quic-section"/>.</t>
+              over QUIC transport <xref target="I-D.ietf-netconf-over-quic"/> or RESTCONF over HTTP3 can be configured with appropriate QUIC transport parameters as discussed in <xref target="quic-section"/>.</t>
           <t>Given the non-typical delays in requests and response in space compared to traditional network management frameworks on Internet and private networks, expectations about when configuration changes will be applied and confirmed or the timeliness of the actual value received from a request need to be taken into account. For example, a configuration change may take hours to be received by the spacecraft, which is not expected in typical network operations. A request for some value may take hours to be received by the spacecraft and take hours to be received by the requestor, which means the value may not be current or expired. Moreover, typical timeouts of NETCONF clients should be adjusted to the expected RTT.</t>
           <t>While being declared historic in IETF, SNMP<xref target="RFC1157"/> runs over UDP and has no notion of time. Therefore, with proper configuration of client timeout, it can be used as is to manage nodes and services in deep space.</t>
       </section>
@@ -660,6 +659,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7252.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7567.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8040.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8085.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8305.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8961.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9000.xml"/>
