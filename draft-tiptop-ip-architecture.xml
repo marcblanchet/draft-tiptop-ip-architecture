@@ -30,7 +30,7 @@
       </address>
     </author>
     <author fullname="Tony Li" initials="TL">
-      <organization>Juniper Networks</organization>
+      <organization>Hewlett Packard Enterprise</organization>
       <address>
         <postal>
           <country>USA</country>
@@ -49,8 +49,8 @@
     <keyword>routing</keyword>
     <abstract>
       <t>
-	The IP protocol stacks used on Earth's Internet typically
-	are configured based on assumptions of short delays and mostly uninterrupted
+	The IP protocol stacks used on Earth's Internet are
+	typically configured based on assumptions of short delays and mostly uninterrupted
 	communications. This document describes the architecture of the
 	IP protocol stack tailored for its use in deep space. It
 	involves buffering IP packets in IP forwarders facing
@@ -65,7 +65,7 @@
     <section anchor="intro">
         <name>Introduction</name>
       <t>
-	Deep space communications involve long delays and intermittent connectivity due to the distances and orbital motion involved.  For instance,
+	Deep-space communications involve long delays and intermittent connectivity due to the distances and orbital motion involved.  For instance,
             Earth to Mars transmissions vary 4-24 minutes, and are unavailable periodically due to rotation, conjunctions, and other conditions.
       </t>
       <t>Deep space communications 
@@ -85,11 +85,12 @@
       as Wi-Fi or 5G. On the surface, the plans involve dense
       networking around facilities and habitats.  New mission concepts are also including clusters of multiple networked nodes co-located at Lagrange points.</t>
       <t>
- Given the evolution of modern IP application protocol stacks and the new needs of deep space missions, this document describes an "architecture" for the use of IP in deep space, meeting needs described in <xref target="I-D.many-tiptop-usecase"/>.
+ Given the evolution of modern IP application protocol stacks and the new needs of deep space missions, this document describes an architecture for the use of IP in deep space, meeting needs described in <xref target="I-D.many-tiptop-usecase"/>.
  This includes:
       </t>
       <ul>
-        <li>running IP over deep space layer-2 links,</li>
+        <li>running IP over end-to-end paths that include
+	high-latency, deep space layer-2 links,</li>
         <li>buffering of IP packets, when needed,</li>
         <li>IP addressing and routing,</li>
         <li>transport protocol configuration,</li>
@@ -188,6 +189,23 @@
       the Time To Live (TTL) field of IPv4 was defined based on time
       <xref target="STD5"/>, but it has been effectively implemented
       as a hop count, which was renamed as "Hop Count" in IPv6 <xref target="STD86"/>. Nothing needs to be changed to the IP protocol or its packet format.</t>
+
+      <t>
+	The architecture described in this document can support IPv4
+	and/or IPv6. While some may prefer one version or another,
+	there are important considerations that complicate
+	matters. Deep space links are very low bandwidth. The
+	additional overhead of an IPv6 packet will have a bandwidth
+	and performance impact that needs to be considered early in
+	mission planning. From a future-proofing perspective, IPv6 is
+	to be preferred.  Eventually, as technology evolves and the
+	bandwidth constraints are relieved, we would greatly prefer to
+	not have to retrofit existing, deployed spacecraft with
+	IPv6. Ultimately, however, the IETF does not have authority
+	over this decision. The various space agencies, working in
+	unison, should make this joint decision and select one version
+	for interopability.
+      </t>
       <section>
         <name>IP Forwarding and Store-and-Forward</name>
         <t>
@@ -262,28 +280,39 @@
       orbits. Management of the IP address space is currently
       documented in <xref target="RFC7020"/>, but this only covers
       continental regions and does not provide for addressing for
-      space.
+      space. The depletion of the IPv4 address space means that there
+      is little than can be done if agencies decide to use
+      IPv4.
     </t>
-        <t>
-      Address space for outer space should be managed by a
-      Regional Internet Registry (RIR) and blocks of address space
-      should be allocated for each celestial body of
-      interest. Space service providers should use prefixes
-      assigned by this RIR.
+    <t>
+      However, if agencies decide to utilize IPv6, it would be deeply
+      beneficial if addressing was designed to allow for the maximum
+      aggregation of routing prefixes. Aggregation of prefixes
+      assigned to celestrial bodies would minimize the overhead
+      incurred by relaying spacecraft, minimizing expensive hardware
+      requirements and would help minimize route flap.  Thus, to help
+      achieve maximum aggregation, the address space for outer space
+      should be managed by a Regional Internet Registry (RIR) and
+      blocks of address space should be allocated for each celestial
+      body of interest. Space service providers should use prefixes
+      assigned by this RIR. This is discussed in more detail in <xref
+      target="I-D.li-tiptop-address-space"/>.
     </t>
       </section>
       <section title="Routing">
         <t>
-	Existing routing protocols require proof of
-	liveness between protocol partners, implemented through
-	the periodic exchange of packets between partners. This is
-	impractical on long-delay or intermittent links, so a PCE
+	Existing routing protocols require proof of liveness between
+	protocol partners, implemented through the periodic exchange
+	of packets between partners. This is impractical on long-delay
+	or intermittent links, so a Path Computation Engine (PCE)
 	<xref target="RFC4655"/> based approach seems appropriate for
-	those domains possibly supplemented by contact plan schedules<xref target="I-D.ietf-tvr-schedule-yang"/>. Interconnection between
+	those domains possibly supplemented by contact plan
+	schedules<xref
+	target="I-D.ietf-tvr-schedule-yang"/>. Interconnection between
 	domains can still be done with BGP <xref target="RFC4271"/>,
 	but long-delay or intermittent links should be
-	avoided. Domains straddling such links must provide
-	proxy advertisements for prefixes reachable across such links.
+	avoided. Domains straddling such links must provide proxy
+	advertisements for prefixes reachable across such links.
       </t>
         <t>
 	Optimal routing for domains with intermittent links is out of
@@ -293,6 +322,20 @@
 	On the surface of celestial bodies and in proximal orbit,
 	traditional protocols are applicable and should be used (e.g.,
 	<xref target="RFC9717"/>).
+      </t>
+      <t>
+	Because of bandwidth limitations, the PCE for a domain may
+	require the ability to specify an explicit path, but using an
+	explicit path across an intermittent link may be
+	problematic. If a packet is bound to an explicit path and
+	stored in an intermediate node, then the path may be invalid
+	at the end of the storage period. Conveying a backup path
+	within the packet itself would incur a large performance
+	penalty and is not recommended. Allowing the intermediate node
+	itself to compute the remainder of the path would seem to be
+	the most robust solution. Conventional traffic engineering
+	techniques for getting to storage nodes seem to be
+	appropropriate.
       </t>
       </section>
     </section>
@@ -676,6 +719,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-netconf-over-quic.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-schc-architecture.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-tvr-schedule-yang.xml"/>
+	<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.li-tiptop-address-space.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-deepspace-ip-assessment.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-usecase.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-deepspace-quic-profile.xml"/>
