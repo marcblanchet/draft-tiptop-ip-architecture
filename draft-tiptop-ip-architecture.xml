@@ -149,6 +149,28 @@
         <li><t>TIPTOP-full nodes - These nodes combine aspects of TIPTOP end hosts and TIPTOP forwarding nodes.  This combination may be useful in cases such as small spacecraft or other vehicles that consist of only a single node that must roam autonomously rather than functioning within a well-connected onboard or surface network regime.</t></li>
 	<li><t>Scheduling/orchestration systems - These systems may typically operate out-of-band from application data flows, but are responsible for creating and distributing coordinated network plans based on projected application needs (e.g. to support planned mission operations schedules).  These may only exist within terresterial or other planetary core networks, but are essential, especially in early growth of deep space networks, in order to provide knowledge of expected connectivity schedules and associated stack parameters.</t></li>
       </ul>
+      <t>
+        The figure below illustrates a simplified example set of end-to-end
+        of mission network elements based on this taxonomy, with the data flow
+        described following.
+      </t>
+
+      <artwork>
++------------+  +-------------------+   +--------------------+
+|    MOC     |  | Comm Svc Provider |   | Spacecraft/Vehicle |
++------------+  +-------------------+   +--------------------+
+|            |  |                   |   |                    |
+| TIPTOP     |  |      TIPTOP       |   | TIPTOP    TIPTOP   |
+| End-Host   |  |     Forwarder     |   | Forwarder End-Host |
+|   |        |  |        |          |   |     |       |      |
+| Unmodified |  |    Unmodified     |   |  Onboard Network   |
+| LAN        |  |    IP Networks    |   |  Unmodified LAN    |
++---------\--+  +-/-------------\---+   +--/-----------------+
+           \     /               \        /
+          WAN/VPN              Relay Satellite
+         Unmodified            or DWE Services
+      </artwork>
+
       <t>An example end-to-end command application flow might pass through many nodes, starting within a mission operations center (MOC) at (1) a TIPTOP end-host running command workstation software, and then traversing (2) an unmodified LAN within the MOC, which routes the command packet via (3) an unmodified WAN or VPN connection to a communication service provider (CSP) network.  Within the CSP network, there may be (4) unmodified IP forwarding in other WAN, VPN, and LAN nodes, and (5) a TIPTOP forwarder that queues packets and routes according to schedule via (6) unmodified relay or direct communications services towards the destination spacecraft node.  At the destination spacecraft/vehicle, there may be (7) a TIPTOP forwarder, (8) an unmodified onboard network, and (9) a TIPTOP end-host.</t>
       <t>Within this example command path, there are 2 TIPTOP end hosts, 2 TIPTOP forwarders, and 5+ unmodified typical Internet stack nodes (since multiple hops can be involved in the several LAN and WAN traversals).  This deep space IP architecture is incrementally deployable.</t>
       <t>Making the end-to-end example command data flow possible, an orchestration system on Earth can use knowledge of the spacecraft mission and its commanding needs in order to ensure that at proper times there are scheduled communication system resources (antennas, modems, etc.) that are physically pointed, tracking, and otherwise configured to close a forward link to the spacecraft at the required data rate.  The orchestration system can also set scheduled routing table entries for the relevant nodes within the path.</t>
