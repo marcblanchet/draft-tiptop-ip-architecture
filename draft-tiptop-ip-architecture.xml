@@ -876,7 +876,7 @@ incorporate/enable in future interplanetary transport stacks.
     <section anchor="Acknowledgements" numbered="false">
       <name>Acknowledgements</name>
       <t>This work started by reassessing the use of the whole IP stack in the context of deep space discussed in <xref target="I-D.many-deepspace-ip-assessment"/> where early contributors are acknowledged.</t>
-      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padme Pillay-Esnault, Marius Feldmann, Britta Hale.</t>
+      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padme Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu.</t>
     </section>
   </back>
 </rfc>
