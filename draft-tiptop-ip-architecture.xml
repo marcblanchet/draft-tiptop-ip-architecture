@@ -51,7 +51,7 @@
       <t>
 	The IP protocol stacks used on Earth's Internet are
 	typically configured based on assumptions of short delays and mostly uninterrupted
-	communications. This document describes the architecture of the
+	communications. This document describes an architecture of the
 	IP protocol stack tailored for its use in deep space. It
 	involves buffering IP packets in IP forwarders facing
 	intermittent links
@@ -85,7 +85,7 @@
       as Wi-Fi or 5G. On the surface, the plans involve dense
       networking around facilities and habitats.  New mission concepts are also including clusters of multiple networked nodes co-located at Lagrange points.</t>
       <t>
- Given the evolution of modern IP application protocol stacks and the new needs of deep space missions, this document describes an architecture for the use of IP in deep space, meeting needs described in <xref target="I-D.many-tiptop-usecase"/>.
+ Given the evolution of modern IP application protocol stacks and the new needs of deep space missions, this document describes an architecture for the use of IP in deep space, meeting needs described in <xref target="I-D.ietf-tiptop-usecase"/>.
  This includes:
       </t>
       <ul>
@@ -131,7 +131,7 @@
       The scope of "deep space" in this document includes the Moon, although this is not strictly within the ITU's definition of the term.
       </t>
 
-      <t>The key characteristics of space communications and networking, the relevant use case aspects and requirements are discussed in <xref target="I-D.many-tiptop-usecase"/>.</t>
+      <t>The key characteristics of space communications and networking, the relevant use case aspects and requirements are discussed in <xref target="I-D.ietf-tiptop-usecase"/>.</t>
       <section>
         <name>Document and Discussion Location</name>
         <t>The source of this document is located at https://github.com/marcblanchet/draft-tiptop-ip-architecture. Comments or changes are welcomed using a PR or an issue.</t>
@@ -140,7 +140,7 @@
     </section>
     <section anchor="overview">
       <name>Architecture Overview</name>
-      <t>This section provides a short overview of the architecture for IP in deep space.</t>
+      <t>This section provides a short overview of this architecture for IP in deep space.</t>
       <t>One of the key reasons to use IP is to maintain compatibility and potential smooth interoperability with other IP networks that exist terresterially and within space vehicle onboard networks.  While some nodes will require specific deep space protocol support, many nodes within the network can have traditional unmodified IP stacks that remain configured as if for typical Internet uses.</t>
       <t>Within an end-to-end deep space application data flow, several different types of nodes can be involved:</t>
       <ul>
@@ -199,7 +199,7 @@
         <name>Celestial Body Orbits</name>
         <t>For celestial body orbits, IOAG has planned the use of CCSDS
 	link layer protocols. However, as on Earth, it may be possible
-	to use 6G-NTN technology around celestial bodies, such as in
+	to use 6G-NTN technology<xref target="6gntn-3gpp"/> around celestial bodies, such as in
 	lunar or Martian orbits. 6G-NTN technologies use IP as its
 	layer 3 technology.</t>
       </section>
@@ -213,7 +213,7 @@
       as a hop count, which was renamed as "Hop Count" in IPv6 <xref target="STD86"/>. Nothing needs to be changed to the IP protocol or its packet format.</t>
 
       <t>
-	The architecture described in this document can support IPv4
+	This architecture can support IPv4
 	and/or IPv6. While some may prefer one version or another,
 	there are important considerations that complicate
 	matters. Deep space links are very low bandwidth. The
@@ -221,21 +221,21 @@
 	and performance impact that needs to be considered early in
 	mission planning. From a future-proofing perspective, IPv6 is
 	to be preferred.  Eventually, as technology evolves and the
-	bandwidth constraints are relieved, we would greatly prefer to
+	bandwidth constraints are relieved, it would be preferable to
 	not have to retrofit existing, deployed spacecraft with
 	IPv6. Ultimately, however, the IETF does not have authority
 	over this decision. The various space agencies, working in
 	unison, should make this joint decision and select one version
-	for interopability.
+	for interoperability.
       </t>
       <section>
         <name>IP Forwarding and Store-and-Forward</name>
         <t>
 	  For deep space applications, an IP packet may need to be
-	  queued for much longer periods than are typical
+	  queued for much longer periods than typical
 	  for the Internet when the next hop is currently unreachable
       or undefined, which can happen due to planning of periodic contacts
-      around orbital dynamics, and other antenna scheduling limitations. Terms
+      around orbital dynamics, or other antenna scheduling limitations. Terms
       have been used including "store-and-forward" (which is already
       used differently elsewhere in the context of switch architectures), or
       "store, carry, and forward", to describe the behavior of buffering IP
@@ -244,10 +244,10 @@
         </t>
         <t>
 	  This queuing may be implemented at layer
-	  2 as is currently done by the Mars orbiters. In this case,
-	  the frames are stored, regardless of payload type.  In this
+	  2 as currently done by the Mars orbiters, where
+	  frames are stored, regardless of payload type.  In this
 	  case, IP packets are unaware of the store-and-forward and no
-	  changes are needed in the IP forwarding function.  The L2
+	  changes are needed in the IP forwarding function.  The layer 2
 	  network is just behaving as a point-to-point link with a
 	  large and variable latency.
 	</t>
@@ -264,12 +264,13 @@
 	  provisioning of buffer storage memory for the
 	  target deployment and usage. If the buffer is full, then
       packets must be dropped. The choice of which packets
+      to drop depends on the policies configured on the node, which may be a
 	  to drop depends on the policies configured on the node, which may be a
 	  function of traffic class, source or destination IP
 	  addresses, flow labels, or other parameters. An example is
 	  described in <xref target="I-D.blanchet-tvr-forwarding"/>.
 	</t>
-        <t>Packets might also be lost if a buffer is cleared for any other reason (e.g. due to reboot), or corrupted somehow (e.g. due to cosmic rays or other uncorrectable memory upsets).  The architecture described in this document does not require IP forwarding nodes to necessarily implement anything beyond a typical "best effort" service and reliability, though more complex means to support reliable packet delivery are compatible and can interoperate within the architecture if desirable.
+        <t>Packets might also be lost if a buffer is cleared for any other reason (e.g. due to reboot), or corrupted somehow (e.g. due to cosmic rays or other uncorrectable memory upsets).  Given the use of end to end reliable transport, this architecture does not require IP forwarding nodes to necessarily implement anything beyond a typical "best effort" service and reliability, though more complex means to support reliable packet delivery are compatible and can interoperate within this architecture if desirable.
         </t>
       </section>
       <section anchor="headercompression">
@@ -390,16 +391,16 @@ networking.
         <ul>
           <li><t>
 
-Protocol Negotiation / "Happy Eyeballs" - Due to presence of both IPv4 and IPv6
+Protocol Negotiation / "Happy Eyeballs" - Due to the presence of both IPv4 and IPv6
 in the terrestrial Internet, applications or transport stacks may include
 "happy eyeballs" capabilities <xref target="RFC8305"/> that make use of
 multiple DNS queries and connection attempts for different addresses and
 address families returned.  Downsides to this in interplanetary applications
 might include (1) the additional load on interplanetary DNS (although solutions
-to this are avialable <xref target="I-D.many-tiptop-dns"/>), (2) unnecessary
+to this are available <xref target="I-D.many-tiptop-dns"/>), (2) unnecessary
 use of network capacity for parallel connection attempts,
 and (3) unnecessary additional transport state
-maintained for an extended period of time.  If applications for interplanetary
+maintained for an extended period of time. If applications for interplanetary
 use initially rely on either fixed IP addresses (instead of DNS names) or a
 single address family (e.g. IPv6), then there should be no downsides to
 presence of happy eyeballs algorithms within the transport stack.  If happy
@@ -569,9 +570,8 @@ incorporate/enable in future interplanetary transport stacks.
 	the rate of sending packets at the source node to decrease the
 	perceived congestion in the network. QUIC supports many new
 	features suitable and useful in deep space such as 1 RTT for
-	connection establishment and security, mobility, 0 RTT,
-	streams, user space, etc. [TLI: This sentence needs more words
-	to explain these references.]</t>
+	connection establishment and security, mobility, 0 RTT for early
+    data after mobility, streams and user space <xref target="RFC9000"/>. </t>
         <t>Current implementations of QUIC typically set various
 	transport configuration parameters suitable for the Internet
 	environment, expecting an RTT to be in the hundreds of milliseconds
@@ -579,7 +579,7 @@ incorporate/enable in future interplanetary transport stacks.
 	stacks using default configurations will not work in deep
 	space. However, studies and simulations <xref target="quic-sim"/> showed that with proper configuration of
 	parameters, QUIC stacks can support the delays and disruptions
-	in deep space. <xref target="I-D.many-deepspace-quic-profile"/> describes how to
+	in deep space. <xref target="I-D.many-tiptop-quic-profile"/> describes how to
 	properly configure a QUIC stack for deep space applications,
 	where QUIC is unaware of disruptions. If the transport is
 	aware of the disruptions, further optimizations are possible.</t>
@@ -744,8 +744,8 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-tvr-schedule-yang.xml"/>
 	<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.li-tiptop-address-space.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-deepspace-ip-assessment.xml"/>
-        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-usecase.xml"/>
-        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-deepspace-quic-profile.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-tiptop-usecase.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-quic-profile.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.gomez-tiptop-coap.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-dns.xml"/>
         <reference anchor="IPoverCCSDSSpaceLinks" target="https://public.ccsds.org/Pubs/702x1b1c2.pdf">
@@ -851,6 +851,15 @@ incorporate/enable in future interplanetary transport stacks.
             </author>
           </front>
         </reference>
+        <reference anchor="6gntn-3gpp" target="hhttps://www.3gpp.org/technologies/ntn-overview">
+          <front>
+            <title>Non-Terrestrial Networks (NTN)</title>
+            <author>
+              <organization>3GPP</organization>
+            </author>
+          </front>
+        </reference>
+
         <reference anchor="quic-sim" target="https://deepspaceip.github.io/meetings/ietf120/ietf120-deepspaceip-simulation-results.pdf">
           <front>
             <title>Deep Space IP:
@@ -861,6 +870,7 @@ incorporate/enable in future interplanetary transport stacks.
             <date month="July" year="2024"/>
           </front>
         </reference>
+        
       </references>
     </references>
     <section anchor="Acknowledgements" numbered="false">
