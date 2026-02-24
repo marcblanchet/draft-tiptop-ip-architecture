@@ -429,7 +429,7 @@ stifling for Earth-Mars and other interplanetary network paths.  Transports,
 such as QUIC, that have the ability to resume based on shared state from prior
 application connections or to rapidly start transferring data ("0-RTT") can be
 suitably efficient, once initial state is obtained; however, they still require
-a complete initial handshake with the full set of round trip times imposed.
+a complete initial handshake with the full set of round trip times imposed. The use of 0-RTT is subject to replay attacks<xref target="RFC9001"/> and therefore should be considered to be disabled depending on the security policy of the mission.
 For interplanetary use, it may be beneficial to find ways to securely pre-set
 information to allow this more efficient startup, without requiring the full
 initial handshake even once.
@@ -692,6 +692,7 @@ incorporate/enable in future interplanetary transport stacks.
       does not bring new security issues on the protocols themselves.</t>
       <t>However, with longer delays and intermittence, deep space networking brings additional considerations. Security designs must tolerate long validation delays and potentially operate in a disconnected trust model.</t>
       <t>Certificates and keys need to be renewed before their expiration, taking into account the delay to send, receive and confirm. Protocols such as OCSP<xref target="RFC6960"/> providing on-line real-time validation and revocation check will likely not work given the too long delays, therefore certificates need to be validated using local trust anchors.</t>
+      <t>The use of long term keys, such as ones set prior to launch, may create exposure, therefore keys should be renewed at appropriate frequency.</t>
       <t>Given possible lower frequency of time synchronisation, clock drifts may affect expiration and validation.</t>
       <t>Intermediate forwarding nodes may buffer packets for a significant time. While it is presumed that most IP packet payloads will be encrypted by IP or transport security, data-at-rest becomes a possible exposure. If the intermediate node is compromised, the data-at-rest becomes available for the bad actor. This is new and not expected on terrestrial Internet intermediate nodes. </t>
       <t>If bad traffic is injected sufficiently to fill out the intermediate nodes buffer, then this becomes a denial-of-service attack.</t>
@@ -734,6 +735,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8305.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8961.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9000.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9001.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9110.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9111.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9204.xml"/>
