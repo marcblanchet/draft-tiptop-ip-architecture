@@ -199,7 +199,7 @@
         <name>Celestial Body Orbits</name>
         <t>For celestial body orbits, IOAG has planned the use of CCSDS
 	link layer protocols. However, as on Earth, it may be possible
-	to use 6G-NTN technology<xref target="6gntn-3gpp"/> around celestial bodies, such as in
+	to use 6G-NTN technology<xref target="ntn6g3gpp"/> around celestial bodies, such as in
 	lunar or Martian orbits. 6G-NTN technologies use IP as its
 	layer 3 technology.</t>
       </section>
@@ -688,21 +688,25 @@ incorporate/enable in future interplanetary transport stacks.
       <t>Using the current IP protocol stack in deep space inherits
       all the work on privacy, cryptography, key management,
       firewalls, and scrutiny of protocols that are deployed on the
-      Internet. As an example, TLS has been more carefully examined
-      than almost any other secure transport protocol. Moreover, given
-      that no changes are made in the protocols, this architecture
-      does not bring new security issues on the protocols themselves. Deep space security
-      requirements are different than on the existing Internet, but nothing has been found to prevent the conformance of the IP protocol stack to those requirements.</t>
-      <t>As it is currently planned, the deep space network shall be
-      isolated from the current Internet by an "air gap", to disable
+      Internet. Since no change is made in the protocols, this architecture
+      does not bring new security issues on the protocols themselves.</t>
+      <t>However, with longer delays and intermittence, deep space networking brings additional considerations. Security designs must tolerate long validation delays and potentially operate in a disconnected trust model.</t>
+      <t>Certificates and keys need to be renewed before their expiration, taking into account the delay to send, receive and confirm. Protocols such as OCSP<xref target="RFC6960"/> providing on-line real-time validation and revocation check will likely not work given the too long delays, therefore certificates need to be validated using local trust anchors.</t>
+      <t>Given possible lower frequency of time synchronisation, clock drifts may affect expiration and validation.</t>
+      <t>Intermediate forwarding nodes may buffer packets for a significant time. While it is presumed that most IP packet payloads will be encrypted by IP or transport security, data-at-rest becomes a possible exposure. If the intermediate node is compromised, the data-at-rest becomes available for the bad actor. This is new and not expected on terrestrial Internet intermediate nodes. </t>
+      <t>If bad traffic is injected sufficiently to fill out the intermediate nodes buffer, then this becomes a denial-of-service attack.</t>
+      <t>If some packets are buffered in one intermediate node, If multiple paths are possible to a destination, then bad packet injection may use an alternate faster path that would result in the destination receiving the injected bad packets before the proper ones, which may become denial-of-service attacks of various kinds (destination endpoints buffer full, connection resets, ...). While this scenario can happen on terresterial Internet, the bad traffic level and the duration window may be orders of magnitude larger than on Internet, therefore having a potentially much larger impact.</t>
+      <t>Given possible short contact windows and relatively few alternate paths, an attacker may flood a link during the whole contact window, disabling any remediation during that contact window, which means the actual impact will remain longer than the actual attack duration.</t>
+      <t>Given relatively few alternate paths, malicious injection of routes may have a larger impact than on terrestrial Internet.</t>
+      <t>Given a sparse network of few nodes and more predictable traffic patterns than terrestrial Internet, traffic analysis may become more effective, even for encrypted traffic.</t>
+      <t>Security considerations of each transport protocol are discussed in their respective transport protocol profile document.</t>
+      <t>Given low bandwidth, low number of alternate paths, high costs of links and nodes high value, access control to the deep space network and related policies should be in place. For example, at the beginning of the deployment, the deep space network shall be isolated from the current Internet by an "air gap", to disable
       any direct communications from the Internet to deep space. Moreover, destination IP prefix filtering shall be used to restrict the traffic to only the relevant one for each link. Note that this shall also be implemented in the routing control plane, but additional security might be appropriate to further protect the deep space links.</t>
       <t>Each celestial network edge device shall have firewall rules
       to prevent inappropriate traffic from entering deep space
       links. If communications from Mars may only occur to Earth, but
       not to the Moon, then appropriate filtering based on destination
       IP prefixes shall be used.</t>
-      <t>Storage in IP forwarders may become full by normal traffic or by malicious traffic that could become a denial-of-service attack.
-          Appropriate policies and measures should be put in place in those forwarders to drop packets in advance to avoid the depletion of storage space and to mitigate such attacks.</t>
     </section>
   </middle>
   <back>
@@ -721,6 +725,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4838.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6241.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6298.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6960.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7020.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7252.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7567.xml"/>
@@ -851,7 +856,7 @@ incorporate/enable in future interplanetary transport stacks.
             </author>
           </front>
         </reference>
-        <reference anchor="6gntn-3gpp" target="hhttps://www.3gpp.org/technologies/ntn-overview">
+        <reference anchor="ntn6g3gpp" target="hhttps://www.3gpp.org/technologies/ntn-overview">
           <front>
             <title>Non-Terrestrial Networks (NTN)</title>
             <author>
