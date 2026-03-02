@@ -70,7 +70,7 @@
       </t>
       <t>Deep space communications 
       have traditionally been done on
-      a layer-2 point-to-point basis, sometimes uing
+      a layer-2 point-to-point basis, sometimes using
       relays, but no layer-3 networking has been in routine use.
       <xref target="RFC4838"/> reports an assessment done around 25 years
       ago concluding that the IP protocol stack was not suitable for
@@ -134,21 +134,20 @@
       <t>The key characteristics of space communications and networking, the relevant use case aspects and requirements are discussed in <xref target="I-D.ietf-tiptop-usecase"/>.</t>
       <section>
         <name>Document and Discussion Location</name>
-        <t>The source of this document is located at https://github.com/marcblanchet/draft-tiptop-ip-architecture. Comments or changes are welcomed using a PR or an issue.</t>
-        <t>This subject should be discussed on the deepspace@ietf.org mailing list of the Taking IP To Other Planets (TIPTOP) working group.</t>
+        <t>The source of this document is located at https://github.com/marcblanchet/draft-tiptop-ip-architecture. Comments or changes are welcomed using a PR or an issue. However, this document should be discussed on the deepspace@ietf.org mailing list of the Taking IP To Other Planets (TIPTOP) working group.</t>
       </section>
     </section>
     <section anchor="overview">
       <name>Architecture Overview</name>
       <t>This section provides a short overview of this architecture for IP in deep space.</t>
-      <t>One of the key reasons to use IP is to maintain compatibility and potential smooth interoperability with other IP networks that exist terresterially and within space vehicle onboard networks.  While some nodes will require specific deep space protocol support, many nodes within the network can have traditional unmodified IP stacks that remain configured as if for typical Internet uses.</t>
+      <t>One of the key reasons to use IP is to maintain compatibility and potential smooth interoperability with other IP networks that exist terrestrially and within space vehicle onboard networks.  While some nodes will require specific deep space protocol support, many nodes within the network can have traditional unmodified IP stacks that remain configured as if for typical Internet uses.</t>
       <t>Within an end-to-end deep space application data flow, several different types of nodes can be involved:</t>
       <ul>
-        <li><t>Unmodified / Internet nodes - These consists of existing "untuned" IP stacks (not necessarily modified in any way for deep space use versys typical Internet use).  These can exist within planetary surface networks and spacecraft onboard networks, for example.  For instance, these may be the majority of nodes within terrestrial ground systems, mission operations centers, ground stations, and terresterial backbone networks.  Given use of 3GPP architecture in some agency plans, these nodes may be present within onboard or surface core networks.</t></li>
+        <li><t>Unmodified / Internet nodes - These consists of existing "untuned" IP stacks (not necessarily modified in any way for deep space use versus typical Internet use).  These can exist within planetary surface networks and spacecraft onboard networks, for example.  For instance, these may be the majority of nodes within terrestrial ground systems, mission operations centers, ground stations, and terrestrial backbone networks.  Given use of 3GPP architecture in some agency plans, these nodes may be present within onboard or surface core networks.</t></li>
 	<li><t>TIPTOP end-hosts - These nodes include specially tuned transport/application protocol parameters in order to function in deep space scenarios.  Within the network, these specially tuned nodes need only exist at application endpoints (or proxies).</t></li>
 	<li><t>TIPTOP forwarding nodes - These are like typical IP forwarding nodes, except include queuing capabilities for IP packets that go beyond normal Internet use, as described more in <xref target="ip"/>.  Within the total deep space network, these need only exist at transition points between well-connected regimes and the hops through deep space communication system links.  For instance, these may be at the edge of onboard networks or ground station networks.</t></li>
         <li><t>TIPTOP-full nodes - These nodes combine aspects of TIPTOP end hosts and TIPTOP forwarding nodes.  This combination may be useful in cases such as small spacecraft or other vehicles that consist of only a single node that must roam autonomously rather than functioning within a well-connected onboard or surface network regime.</t></li>
-	<li><t>Scheduling/orchestration systems - These systems may typically operate out-of-band from application data flows, but are responsible for creating and distributing coordinated network plans based on projected application needs (e.g. to support planned mission operations schedules).  These may only exist within terresterial or other planetary core networks, but are essential, especially in early growth of deep space networks, in order to provide knowledge of expected connectivity schedules and associated stack parameters.</t></li>
+	<li><t>Scheduling/orchestration systems - These systems may typically operate out-of-band from application data flows, but are responsible for creating and distributing coordinated network plans based on projected application needs (e.g. to support planned mission operations schedules).  These may only exist within terrestrial or other planetary core networks, but are essential, especially in early growth of deep space networks, in order to provide knowledge of expected connectivity schedules and associated stack parameters.</t></li>
       </ul>
       <t>
         The figure below illustrates a simplified example set of end-to-end
@@ -358,7 +357,7 @@
 	itself to compute the remainder of the path would seem to be
 	the most robust solution. Conventional traffic engineering
 	techniques for getting to storage nodes seem to be
-	appropropriate.
+	appropriate.
       </t>
       </section>
     </section>
@@ -407,7 +406,7 @@ presence of happy eyeballs algorithms within the transport stack.  If happy
 eyeballs is present and triggered, then the values in section 8 of <xref
 target="RFC8305"/> should be carefully considered and tuned based on the DNS
 and path expectations (e.g. resolution delay, first address family count,
-connection attmept delay, minimum connection attempt delay, and maximum
+connection attempt delay, minimum connection attempt delay, and maximum
 connection attempt delay) as most of these values are not likely to be
 appropriate even for Earth-lunar paths.
 
@@ -454,7 +453,7 @@ Retransmission - Reliable transport protocols typically keep retransmission
 timers, computed based on round trip time samples <xref target="RFC6298"/>
 <xref target="RFC8961"/>.  Since it may be impossible to even take RTT
 measurements within a contact window, and RTTs may vary significantly across
-contact windows, this type of algorithm is not appropriate for interplanetar
+contact windows, this type of algorithm is not appropriate for interplanetary
 use.  Additionally, default values may be in ranges such as 1 second, that are
 inappropriate for even Earth-lunar paths.  Based on the known propagation times
 for interplanetary paths and predicted contacts, either pre-configured values
@@ -693,17 +692,17 @@ incorporate/enable in future interplanetary transport stacks.
       <t>However, with longer delays and intermittence, deep space networking brings additional considerations. Security designs must tolerate long validation delays and potentially operate in a disconnected trust model.</t>
       <t>Certificates and keys need to be renewed before their expiration, taking into account the delay to send, receive and confirm. Protocols such as OCSP<xref target="RFC6960"/> providing on-line real-time validation and revocation check will likely not work given the too long delays, therefore certificates need to be validated using local trust anchors.</t>
       <t>The use of long term keys, such as ones set prior to launch, may create exposure, therefore keys should be renewed at appropriate frequency.</t>
-      <t>Given possible lower frequency of time synchronisation, clock drifts may affect expiration and validation.</t>
+      <t>Given possible lower frequency of time synchronization, clock drifts may affect expiration and validation.</t>
       <t>Intermediate forwarding nodes may buffer packets for a significant time. While it is presumed that most IP packet payloads will be encrypted by IP or transport security, data-at-rest becomes a possible exposure. If the intermediate node is compromised, the data-at-rest becomes available for the bad actor. This is new and not expected on terrestrial Internet intermediate nodes. </t>
       <t>If bad traffic is injected sufficiently to fill out the intermediate nodes buffer, then this becomes a denial-of-service attack.</t>
-      <t>If some packets are buffered in one intermediate node, If multiple paths are possible to a destination, then bad packet injection may use an alternate faster path that would result in the destination receiving the injected bad packets before the proper ones, which may become denial-of-service attacks of various kinds (destination endpoints buffer full, connection resets, ...). While this scenario can happen on terresterial Internet, the bad traffic level and the duration window may be orders of magnitude larger than on Internet, therefore having a potentially much larger impact.</t>
+      <t>If some packets are buffered in one intermediate node, If multiple paths are possible to a destination, then bad packet injection may use an alternate faster path that would result in the destination receiving the injected bad packets before the proper ones, which may become denial-of-service attacks of various kinds (destination endpoints buffer full, connection resets, ...). While this scenario can happen on terrestrial Internet, the bad traffic level and the duration window may be orders of magnitude larger than on Internet, therefore having a potentially much larger impact.</t>
       <t>Given possible short contact windows and relatively few alternate paths, an attacker may flood a link during the whole contact window, disabling any remediation during that contact window, which means the actual impact will remain longer than the actual attack duration.</t>
       <t>Given relatively few alternate paths, malicious injection of routes may have a larger impact than on terrestrial Internet.</t>
       <t>Given a sparse network of few nodes and more predictable traffic patterns than terrestrial Internet, traffic analysis may become more effective, even for encrypted traffic.</t>
       <t>Security considerations of each transport protocol are discussed in their respective transport protocol profile document.</t>
       <t>Given low bandwidth, low number of alternate paths, high costs of links and nodes high value, access control to the deep space network and related policies should be in place. For example, at the beginning of the deployment, the deep space network shall be isolated from the current Internet by an "air gap", to disable
       any direct communications from the Internet to deep space. Moreover, destination IP prefix filtering shall be used to restrict the traffic to only the relevant one for each link. Note that this shall also be implemented in the routing control plane, but additional security might be appropriate to further protect the deep space links.</t>
-      <t>Each celestial network edge device shall have firewall rules
+      <t>Each tiptop forwarding node, such as celestial network edge device, shall have firewall rules
       to prevent inappropriate traffic from entering deep space
       links. If communications from Mars may only occur to Earth, but
       not to the Moon, then appropriate filtering based on destination
@@ -883,7 +882,7 @@ incorporate/enable in future interplanetary transport stacks.
     <section anchor="Acknowledgements" numbered="false">
       <name>Acknowledgements</name>
       <t>This work started by reassessing the use of the whole IP stack in the context of deep space discussed in <xref target="I-D.many-deepspace-ip-assessment"/> where early contributors are acknowledged.</t>
-      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padme Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu.</t>
+      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padma Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu.</t>
     </section>
   </back>
 </rfc>
