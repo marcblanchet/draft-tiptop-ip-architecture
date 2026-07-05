@@ -7,10 +7,10 @@
 <!ENTITY nbhy "&#8209;">
 <!ENTITY wj "&#8288;">
 ]>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-ietf-tiptop-ip-architecture-00" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-ietf-tiptop-ip-architecture-01" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" version="3">
   <front>
     <title abbrev="IP in Deep Space">An Architecture for IP in Deep Space</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-tiptop-ip-architecture-00"/>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-tiptop-ip-architecture-01"/>
     <author fullname="Marc Blanchet" initials="MB">
       <organization>Viagenie</organization>
       <address>
@@ -84,6 +84,23 @@
       surfaces and orbiting constellations, including link layer technologies such
       as Wi-Fi or 5G. On the surface, the plans involve dense
       networking around facilities and habitats.  New mission concepts are also including clusters of multiple networked nodes co-located at Lagrange points.</t>
+      <t>
+
+        Historically, several aspects of deep space communications have been
+        viewed as obstacles to the use of IP networking, as explained more
+        deeply in <xref target="I-D.ietf-tiptop-usecase"/>, these include:
+
+      </t>
+      <ul>
+          <li>long and variable propagation delays;</li>
+          <li>intermittent and scheduled connectivity;</li>
+          <li>constrained bandwidth;</li>
+          <li>relays needing to buffer data in-transit;</li>
+          <li>protocol timers needing to be adjusted from typical Internet values;</li>
+          <li>remote operation and management of deep space IP nodes;</li>
+          <li>security and access-control for high-value assets.</li>
+      </ul>
+
       <t>
  Given the evolution of modern IP application protocol stacks and the new needs of deep space missions, this document describes an architecture for the use of IP in deep space, meeting needs described in <xref target="I-D.ietf-tiptop-usecase"/>.
  This includes:
@@ -263,7 +280,6 @@
 	  provisioning of buffer storage memory for the
 	  target deployment and usage. If the buffer is full, then
       packets must be dropped. The choice of which packets
-      to drop depends on the policies configured on the node, which may be a
 	  to drop depends on the policies configured on the node, which may be a
 	  function of traffic class, source or destination IP
 	  addresses, flow labels, or other parameters. An example is
@@ -310,15 +326,15 @@
       However, if agencies decide to utilize IPv6, it would be deeply
       beneficial if addressing was designed to allow for the maximum
       aggregation of routing prefixes. Aggregation of prefixes
-      assigned to celestrial bodies would minimize the overhead
+      assigned to celestial bodies would minimize the overhead
       incurred by relaying spacecraft, minimizing expensive hardware
       requirements and would help minimize route flap.  Thus, to help
       achieve maximum aggregation, the address space for outer space
-      should be managed by a Regional Internet Registry (RIR) and
-      blocks of address space should be allocated for each celestial
-      body of interest. Space service providers should use prefixes
-      assigned by this RIR. This is discussed in more detail in <xref
-      target="I-D.li-tiptop-address-space"/>.
+      should be managed based on Regional Internet Registry (RIR) 
+      policies that encourage aggregation.  
+      Deep space service providers should use prefixes
+      assigned via the appropriate RIR(s).  Potential approaches are discussed in more detail in <xref
+          target="I-D.li-tiptop-address-space"/> and <xref target="I-D.kumari-tiptop-address-space"/>.
     </t>
       </section>
       <section title="Routing">
@@ -326,10 +342,12 @@
 	Existing routing protocols require proof of liveness between
 	protocol partners, implemented through the periodic exchange
 	of packets between partners. This is impractical on long-delay
-	or intermittent links, so a Path Computation Engine (PCE)
-	<xref target="RFC4655"/> based approach seems appropriate for
-	those domains possibly supplemented by contact plan
-	schedules<xref
+    or intermittent links, so a controller-based approach is more
+    suitable for those domains.  The Path Computation Engine (PCE)
+    <xref target="RFC4655"/> is an example of this type of centralized
+    approach currently in terrestrial networks.  Scheduled routing
+    updates based on contact plans may also be appropriate for some
+    domains <xref
 	target="I-D.ietf-tvr-schedule-yang"/>. Interconnection between
 	domains can still be done with BGP <xref target="RFC4271"/>,
 	but long-delay or intermittent links should be
@@ -490,7 +508,7 @@ the future.  The advent of IP-based in-network storage for scheduled
 interplanetary links also changes the way that congestion can be measured (e.g.
 in delay-based protocols).  In the near-term, and in present space mission
 operations, it can be assumed that data link capacity is explicitly planned and
-scheduled end-to-end in order to accomodate mission needs.  This makes
+scheduled end-to-end in order to accommodate mission needs.  This makes
 congestion control algorithms largely replaceable with simple nominal rate and
 flow control.  However, for larger and more dynamic future interplanetary
 networks, and shared trunk links, etc., it will be useful in the future to develop more
@@ -694,19 +712,22 @@ incorporate/enable in future interplanetary transport stacks.
       <t>The use of long term keys, such as ones set prior to launch, may create exposure, therefore keys should be renewed at appropriate frequency.</t>
       <t>Given possible lower frequency of time synchronization, clock drifts may affect expiration and validation.</t>
       <t>Intermediate forwarding nodes may buffer packets for a significant time. While it is presumed that most IP packet payloads will be encrypted by IP or transport security, data-at-rest becomes a possible exposure. If the intermediate node is compromised, the data-at-rest becomes available for the bad actor. This is new and not expected on terrestrial Internet intermediate nodes. </t>
-      <t>If bad traffic is injected sufficiently to fill out the intermediate nodes buffer, then this becomes a denial-of-service attack.</t>
-      <t>If some packets are buffered in one intermediate node, If multiple paths are possible to a destination, then bad packet injection may use an alternate faster path that would result in the destination receiving the injected bad packets before the proper ones, which may become denial-of-service attacks of various kinds (destination endpoints buffer full, connection resets, ...). While this scenario can happen on terrestrial Internet, the bad traffic level and the duration window may be orders of magnitude larger than on Internet, therefore having a potentially much larger impact.</t>
-      <t>Given possible short contact windows and relatively few alternate paths, an attacker may flood a link during the whole contact window, disabling any remediation during that contact window, which means the actual impact will remain longer than the actual attack duration.</t>
+      <t>Several forms of denial of service attack are possible, if malicious traffic can be injected into the network.  These are similar to attacks used on the Internet, but may have more severe consequences in deep space settings.  As a mitigation, aggressive ingress filtering may be expected to protect deep space networks.  Some threats include:</t>
+      <ul>
+        <li>An attacker could generate traffic to exhaust buffers at forwarding nodes or available bandwidth of constrained links.  Impacts could be more severe than typical for the Internet, due to the larger and longer-term buffering.</li>
+        <li>Due to the possibility of large delays and disconnection periods on a path, when multiple paths are possible to a destination, then an attacker might inject attack packets that arrive sooner than legitimate ones.  This could tie up resources or impact protocol state machines.  While this same scenario is possible on the terrestrial Internet, the relative degree of traffic and duration windows may be orders of magnitude larger in the deep space setting.</li>
+        <li>Given possible short contact windows and relatively few alternate paths, an attacker may flood a link during the whole contact window, disabling any remediation during that contact window, which means the effective impact will remain longer than the actual attack duration.</li>
+      </ul>
       <t>Given relatively few alternate paths, malicious injection of routes may have a larger impact than on terrestrial Internet.</t>
       <t>Given a sparse network of few nodes and more predictable traffic patterns than terrestrial Internet, traffic analysis may become more effective, even for encrypted traffic.</t>
       <t>Security considerations of each transport protocol are discussed in their respective transport protocol profile document.</t>
-      <t>Given low bandwidth, low number of alternate paths, high costs of links and nodes high value, access control to the deep space network and related policies should be in place. For example, at the beginning of the deployment, the deep space network shall be isolated from the current Internet by an "air gap", to disable
-      any direct communications from the Internet to deep space. Moreover, destination IP prefix filtering shall be used to restrict the traffic to only the relevant one for each link. Note that this shall also be implemented in the routing control plane, but additional security might be appropriate to further protect the deep space links.</t>
-      <t>Each tiptop forwarding node, such as celestial network edge device, shall have firewall rules
+      <t>Given low bandwidth, low number of alternate paths, high costs of links and nodes high value, access control to the deep space network and related policies should be in place. For example, in early deployments, deep space networks might be isolated from the current Internet by an "air gap", to disable
+      any direct communications from the Internet to deep space. Destination IP prefix filtering is recommended to restrict traffic to only relevant anticipated packets for each link.  Security policies may be implemented both in the routing control plane as well as locally at TIPTOP forwarding nodes to further protect deep space links.</t>
+      <t>Each TIPTOP forwarding node, such as "edge" devices that provide transitions between local planetary networks and deep space links, should have firewall rules
       to prevent inappropriate traffic from entering deep space
-      links. If communications from Mars may only occur to Earth, but
+      links. For example, if policies indicate that communications from Mars may only occur to Earth, but
       not to the Moon, then appropriate filtering based on destination
-      IP prefixes shall be used.</t>
+          IP prefixes should be used.  In this context, the relevant "edge" device is deployent-specific and might be an Earth-side gateway, orbiting relay, planetary surface gateway, or spacecraft/vehicle forwarding node.  Filtering and access control policies may need to be enforced at multiple points along a path.</t>
     </section>
   </middle>
   <back>
@@ -749,6 +770,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-schc-architecture.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-tvr-schedule-yang.xml"/>
 	<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.li-tiptop-address-space.xml"/>
+	<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.kumari-tiptop-address-space.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-deepspace-ip-assessment.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-tiptop-usecase.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-quic-profile.xml"/>
@@ -882,7 +904,7 @@ incorporate/enable in future interplanetary transport stacks.
     <section anchor="Acknowledgements" numbered="false">
       <name>Acknowledgements</name>
       <t>This work started by reassessing the use of the whole IP stack in the context of deep space discussed in <xref target="I-D.many-deepspace-ip-assessment"/> where early contributors are acknowledged.</t>
-      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padma Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu.</t>
+      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padma Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu, and John Curran.</t>
     </section>
   </back>
 </rfc>
