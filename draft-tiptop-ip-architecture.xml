@@ -326,15 +326,15 @@
       However, if agencies decide to utilize IPv6, it would be deeply
       beneficial if addressing was designed to allow for the maximum
       aggregation of routing prefixes. Aggregation of prefixes
-      assigned to celestrial bodies would minimize the overhead
+      assigned to celestial bodies would minimize the overhead
       incurred by relaying spacecraft, minimizing expensive hardware
       requirements and would help minimize route flap.  Thus, to help
       achieve maximum aggregation, the address space for outer space
-      should be managed by a Regional Internet Registry (RIR) and
-      blocks of address space should be allocated for each celestial
-      body of interest. Space service providers should use prefixes
-      assigned by this RIR. This is discussed in more detail in <xref
-      target="I-D.li-tiptop-address-space"/>.
+      should be managed based on Regional Internet Registry (RIR) 
+      policies that encourage aggregation.  
+      Deep space service providers should use prefixes
+      assigned via the appropriate RIR(s).  Potential approaches are discussed in more detail in <xref
+          target="I-D.li-tiptop-address-space"/> and <xref target="I-D.kumari-tiptop-address-space"/>.
     </t>
       </section>
       <section title="Routing">
@@ -770,6 +770,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-schc-architecture.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-tvr-schedule-yang.xml"/>
 	<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.li-tiptop-address-space.xml"/>
+	<xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.kumari-tiptop-address-space.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-deepspace-ip-assessment.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-tiptop-usecase.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-quic-profile.xml"/>
@@ -903,7 +904,7 @@ incorporate/enable in future interplanetary transport stacks.
     <section anchor="Acknowledgements" numbered="false">
       <name>Acknowledgements</name>
       <t>This work started by reassessing the use of the whole IP stack in the context of deep space discussed in <xref target="I-D.many-deepspace-ip-assessment"/> where early contributors are acknowledged.</t>
-      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padma Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu.</t>
+      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padma Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu, and John Curran.</t>
     </section>
   </back>
 </rfc>
