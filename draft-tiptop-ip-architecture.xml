@@ -244,7 +244,7 @@
 	unison, should make this joint decision and select one version
 	for interoperability.
       </t>
-      <section>
+      <section anchor="forwarding">
         <name>IP Forwarding and Store-and-Forward</name>
         <t>
 	  For deep space applications, an IP packet may need to be
@@ -694,6 +694,29 @@ incorporate/enable in future interplanetary transport stacks.
               over QUIC transport <xref target="I-D.ietf-netconf-over-quic"/> or RESTCONF over HTTP3 can be configured with appropriate QUIC transport parameters as discussed in <xref target="quic-section"/>.</t>
           <t>Given the non-typical delays in requests and response in space compared to traditional network management frameworks on Internet and private networks, expectations about when configuration changes will be applied and confirmed or the timeliness of the actual value received from a request need to be taken into account. For example, a configuration change may take hours to be received by the spacecraft, which is not expected in typical network operations. A request for some value may take hours to be received by the spacecraft and take hours to be received by the requestor, which means the value may not be current or expired. Moreover, typical timeouts of NETCONF clients should be adjusted to the expected RTT.</t>
           <t>While being declared historic in IETF, SNMP<xref target="RFC1157"/> runs over UDP and has no notion of time. Therefore, with proper configuration of client timeout, it can be used as is to manage nodes and services in deep space.</t>
+          <t>The buffering behaviour described in <xref target="forwarding"/>
+              creates operational state that is specific to this architecture
+              and that an operator needs to observe. Without it, the
+              provisioning requirement in <xref target="forwarding"/> cannot be
+              validated after deployment, and the buffer exhaustion attack
+              described in <xref target="Security"/> cannot be distinguished
+              from legitimate congestion or from a longer-than-usual scheduled
+              outage. A forwarder should therefore expose at least:</t>
+          <ul>
+              <li>current and high-water buffer occupancy, per queue;</li>
+              <li>the age of the oldest buffered packet;</li>
+              <li>drop counters attributed to the policy dimension that caused
+                  the drop, such as traffic class, addresses or flow label, so
+                  that the policy configured per <xref target="forwarding"/> is
+                  auditable;</li>
+              <li>an explicit indication when a buffer is cleared other than by
+                  transmission, for example the reboot and memory upset cases
+                  described in <xref target="forwarding"/>.</li>
+          </ul>
+          <t>The last item matters because such losses are silent to the
+              endpoints until a transport timeout fires, which at these delays
+              may be a long time. Defining the data model that carries this
+              state is out of scope for this document.</t>
       </section>
     </section>
     <section anchor="IANA">
