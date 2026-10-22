@@ -271,9 +271,11 @@
 	  If an IP forwarder has an interface on an intermittent link, and that link is down,
       some destinations may become unreachable when there is no alternate route. In this case,
 	  the forwarder buffers the IP packets locally instead of dropping them. This might be implemented as a deep queue with
-	  active queue management (AQM) <xref target="RFC7567"/>. When the
+ 	  a configured bound and drop policy.
+	  When the
 	  route to the destination is back, on the same link or a different link, maybe minutes or hours
 	  later, the stored packets can be transmitted.
+	  For managing this buffer, some varieties of active queue management (AQM) <xref target="RFC7567"/> may be appropriate, but this use case differs from the typical Internet use of AQM, since no packets may be leaving the buffer for long periods.  
 	</t>
         <t>
 	  This requires proper
