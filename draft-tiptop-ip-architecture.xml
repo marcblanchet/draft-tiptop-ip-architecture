@@ -692,7 +692,7 @@ incorporate/enable in future interplanetary transport stacks.
       <section>
           <name>Network Management</name>
           <t>
-          A TIPTOP forwarder SHOULD expose information on the state of buffers that it provides for packets awaiting transmission on a deep-space link.  This information SHOULD include at least, per-queue:
+	  The buffering behavior described in <xref target="buffer"/> creates state that it may be useful for an operator or management system to observe.  Some motivations include being able to determine if sufficient resources have been provisioned per-flow or traffic class, or to distinguish a buffer exhaustion attack <xref target="Security"/> from legitimate traffic being queued during a long outage.  A TIPTOP forwarder SHOULD expose information on the state of buffers that it provides for packets awaiting transmission on a deep-space link.  This information SHOULD include at least, per-queue:
 	  </t>
 	  <ul>
 		  <li>Current and high-water buffer occupancy.</li>
@@ -700,6 +700,8 @@ incorporate/enable in future interplanetary transport stacks.
 		  <li>Drop counters attributable to specific traffic classes or policies as mentioned in <xref target="buffer"/>.</li>
 		  <li>An explicit event when a buffer is cleared other than by transmission; e.g. due to a reboot or other memory-clearing event as mentioned in <xref target="buffer"/>.</li>
 	  </ul>
+
+	  <t>The exact data model for this information is out of scope for this informational architecture document, but can be defined in a separate detailed specification.</t>
 
 	  <t>NETCONF <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/> shall be used with proper configuration
               values to avoid timeouts and appropriate transport. NETCONF
