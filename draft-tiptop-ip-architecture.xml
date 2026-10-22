@@ -244,8 +244,8 @@
 	unison, should make this joint decision and select one version
 	for interoperability.
       </t>
-      <section>
-        <name>IP Forwarding and Store-and-Forward</name>
+      <section anchor="buffer">
+        <name>IP Forwarding and Buffers</name>
         <t>
 	  For deep space applications, an IP packet may need to be
 	  queued for much longer periods than typical
@@ -270,10 +270,12 @@
         <t>
 	  If an IP forwarder has an interface on an intermittent link, and that link is down,
       some destinations may become unreachable when there is no alternate route. In this case,
-	  the forwarder buffers the IP packets locally instead of dropping them. This might be implemented as a deep queue with
-	  active queue management (AQM) <xref target="RFC7567"/>. When the
+	  the forwarder may buffer the IP packets locally instead of dropping them. This might be implemented as a deep queue with
+ 	  a configured bound and drop policy.
+	  When the
 	  route to the destination is back, on the same link or a different link, maybe minutes or hours
 	  later, the stored packets can be transmitted.
+	  For managing this buffer, some varieties of active queue management (AQM) <xref target="RFC7567"/> may be appropriate, but this use case differs from the typical Internet use of AQM, since no packets may be leaving the buffer for long periods.  
 	</t>
         <t>
 	  This requires proper
@@ -689,7 +691,19 @@ incorporate/enable in future interplanetary transport stacks.
       </section>
       <section>
           <name>Network Management</name>
-          <t>NETCONF <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/> shall be used with proper configuration
+          <t>
+	  The buffering behavior described in <xref target="buffer"/> creates state that it may be useful for an operator or management system to observe.  Some motivations include being able to determine if sufficient resources have been provisioned per-flow or traffic class, or to distinguish a buffer exhaustion attack <xref target="Security"/> from legitimate traffic being queued during a long outage.  A TIPTOP forwarder SHOULD expose information on the state of buffers that it provides for packets awaiting transmission on a deep-space link.  This information SHOULD include at least, per-queue:
+	  </t>
+	  <ul>
+		  <li>Current and high-water buffer occupancy.</li>
+		  <li>Age of the oldest buffered packet (indicating how stale the queue head is).</li>
+		  <li>Drop counters attributable to specific traffic classes or policies as mentioned in <xref target="buffer"/>.</li>
+		  <li>An explicit event when a buffer is cleared other than by transmission; e.g. due to a reboot or other memory-clearing event as mentioned in <xref target="buffer"/>.</li>
+	  </ul>
+
+	  <t>The exact data model for this information is out of scope for this informational architecture document, but can be defined in a separate detailed specification.</t>
+
+	  <t>NETCONF <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/> shall be used with proper configuration
               values to avoid timeouts and appropriate transport. NETCONF
               over QUIC transport <xref target="I-D.ietf-netconf-over-quic"/> or RESTCONF over HTTP3 can be configured with appropriate QUIC transport parameters as discussed in <xref target="quic-section"/>.</t>
           <t>Given the non-typical delays in requests and response in space compared to traditional network management frameworks on Internet and private networks, expectations about when configuration changes will be applied and confirmed or the timeliness of the actual value received from a request need to be taken into account. For example, a configuration change may take hours to be received by the spacecraft, which is not expected in typical network operations. A request for some value may take hours to be received by the spacecraft and take hours to be received by the requestor, which means the value may not be current or expired. Moreover, typical timeouts of NETCONF clients should be adjusted to the expected RTT.</t>
