@@ -682,7 +682,7 @@ incorporate/enable in future interplanetary transport stacks.
       
       <section anchor="coap-section">
           <name>CoAP</name>
-          <t>The Constrained Application Protocol (CoAP)<xref target="RFC7252"/> is a specialized RESTful protocol for use with constrained nodes and constrained networks, therefore a candidate for an application protocol for space, similar to HTTP. If considered, proper use of its underlying transport and timers should be looked at as discussed in <xref target="I-D.gomez-tiptop-coap"/>. Since IP forwarding nodes provide a best effort service (see <xref target="ip"/>), applications requiring reliable delivery should use the CoAP reliability mechanisms, such as Confirmable messages, configured as discussed in <xref target="I-D.gomez-tiptop-coap"/>.</t>
+          <t>The Constrained Application Protocol (CoAP)<xref target="RFC7252"/> is a specialized RESTful protocol for use with constrained nodes and constrained networks, therefore a candidate for an application protocol for space, similar to HTTP. If considered, proper use of its underlying transport and timers should be looked at as discussed in <xref target="I-D.gomez-tiptop-coap"/>. Since IP forwarding nodes provide a best effort service (see <xref target="ip"/>), applications requiring reliable delivery should use the CoAP reliability mechanisms, i.e, Confirmable messages, configured as discussed in <xref target="I-D.gomez-tiptop-coap"/>.</t>
       </section>
     </section>
     </section>
