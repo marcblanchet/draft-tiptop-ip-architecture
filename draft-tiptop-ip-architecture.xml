@@ -466,7 +466,7 @@ stifling for Earth-Mars and other interplanetary network paths.  Transports,
 such as QUIC, that have the ability to resume based on shared state from prior
 application connections or to rapidly start transferring data ("0-RTT") can be
 suitably efficient, once initial state is obtained; however, they still require
-a complete initial handshake with the full set of round trip times imposed. The use of 0-RTT is subject to replay attacks<xref target="RFC9001"/> and therefore should be considered to be disabled depending on the security policy of the mission. The short header used by 1-RTT packets is also preferable over the long header of 0-RTT packets (<xref target="RFC9000" section="17" sectionFormat="of"/>), as the latter adds overhead on very low bandwidth links.
+a complete initial handshake with the full set of round trip times imposed. The use of 0-RTT is subject to replay attacks<xref target="RFC9001"/> and therefore should be considered to be disabled depending on the security policy of the mission.
 For interplanetary use, it may be beneficial to find ways to securely pre-set
 information to allow this more efficient startup, without requiring the full
 initial handshake even once.
