@@ -643,7 +643,16 @@ incorporate/enable in future interplanetary transport stacks.
     </section>
     <section anchor="applications">
       <name>Applications</name>
-      <t>While many Web applications already use REST, operating them in deep space requires a concrete deployment and design model that differs from terrestrial assumptions. A functional deep-space Web system would consist of RESTful HTTP (or CoAP) services with explicitly configured timeouts, caching behavior, and asynchronous request handling. Application endpoints are designed to accept long request–response delays, return idempotent resources, and avoid chatty multi-RTT interactions. Content is aggressively pre-cached and replicated at planetary or orbital gateways so that most REST interactions are satisfied locally, while end-to-end exchanges tolerate hours or days of delay. In this model, a “Web app” is not an interactive browser session, but a set of asynchronous REST resources whose state can be fetched, updated, or synchronized opportunistically as connectivity becomes available. This section describes the specific protocol configurations and application patterns needed to adapt existing REST-based systems into such a deep-space-capable Web architecture.</t>
+      <t>While many Web applications already use REST, operating them in deep space requires a concrete deployment
+          and design model that differs from terrestrial assumptions. A functional deep-space Web system would consist of
+          RESTful HTTP (or CoAP) services with explicitly configured timeouts, caching behavior, and asynchronous request
+          handling. Application endpoints are designed to accept long request–response delays, return idempotent resources,
+          and avoid chatty multi-RTT interactions. Content is aggressively pre-cached and replicated at planetary or orbital
+          gateways so that most REST interactions are satisfied locally, while end-to-end exchanges tolerate hours or days of
+          delay. In this model, a 'Web app' is not an interactive browser session, but a set of asynchronous REST resources
+          whose state can be fetched, updated, or synchronized opportunistically as connectivity becomes available.
+          This section describes the specific protocol configurations and application patterns needed to adapt existing
+          REST-based systems into such a deep-space-capable Web architecture.</t>
     <section anchor="http-section">
       <name>HTTP</name>
       <t>HTTP by itself has no notion of time. An HTTP request and
