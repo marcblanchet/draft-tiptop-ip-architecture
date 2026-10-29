@@ -7,10 +7,10 @@
 <!ENTITY nbhy "&#8209;">
 <!ENTITY wj "&#8288;">
 ]>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-ietf-tiptop-ip-architecture-01" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-ietf-tiptop-ip-architecture-02" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" version="3">
   <front>
     <title abbrev="IP in Deep Space">An Architecture for IP in Deep Space</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-tiptop-ip-architecture-01"/>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-tiptop-ip-architecture-02"/>
     <author fullname="Marc Blanchet" initials="MB">
       <organization>Viagenie</organization>
       <address>
@@ -982,7 +982,7 @@ incorporate/enable in future interplanetary transport stacks.
     <section anchor="Acknowledgements" numbered="false">
       <name>Acknowledgements</name>
       <t>This work started by reassessing the use of the whole IP stack in the context of deep space discussed in <xref target="I-D.many-deepspace-ip-assessment"/> where early contributors are acknowledged.</t>
-      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padma Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu, John Curran, and Martine Lenders.</t>
+      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padma Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu, John Curran, Adolfo Ochagavia, Saumya Dikshit, Wes Hardaker and Martine Lenders.</t>
     </section>
   </back>
 </rfc>
