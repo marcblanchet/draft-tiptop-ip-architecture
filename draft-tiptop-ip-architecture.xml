@@ -167,30 +167,42 @@
 	<li><t>Scheduling/orchestration systems - These systems may typically operate out-of-band from application data flows, but are responsible for creating and distributing coordinated network plans based on projected application needs (e.g. to support planned mission operations schedules).  These may only exist within terrestrial or other planetary core networks, but are essential, especially in early growth of deep space networks, in order to provide knowledge of expected connectivity schedules and associated stack parameters.</t></li>
       </ul>
       <t>
-        The figure below illustrates a simplified example set of end-to-end
-        of mission network elements based on this taxonomy, with the data flow
-        described following.
+        <xref target="fig-overview"/> illustrates a simplified example set of
+        end-to-end mission network elements based on this taxonomy, with the
+        data flow described following. The numbers in parentheses identify
+        the elements traversed by the example data flow, and the dotted lines
+        represent the out-of-band interactions of the scheduling/orchestration
+        system.
       </t>
 
-      <artwork>
-+------------+  +-------------------+   +--------------------+
-|    MOC     |  | Comm Svc Provider |   | Spacecraft/Vehicle |
-+------------+  +-------------------+   +--------------------+
-|            |  |                   |   |                    |
-| TIPTOP     |  |      TIPTOP       |   | TIPTOP    TIPTOP   |
-| End-Host   |  |     Forwarder     |   | Forwarder End-Host |
-|   |        |  |        |          |   |     |       |      |
-| Unmodified |  |    Unmodified     |   |  Onboard Network   |
-| LAN        |  |    IP Networks    |   |  Unmodified LAN    |
-+---------\--+  +-/-------------\---+   +--/-----------------+
-           \     /               \        /
-          WAN/VPN              Relay Satellite
-         Unmodified            or DWE Services
-      </artwork>
+      <figure anchor="fig-overview">
+        <name>Example of End-to-End Mission Network Elements</name>
+        <artwork>
++--------------------------------------------------------------+
+|               Scheduling/Orchestration System                |
++--------------------------------------------------------------+
+      :                   :                        :
+      :                   :                        :
++------------+  +-------------------+  +-----------------------+
+|    MOC     |  |        CSP        |  |  Spacecraft/Vehicle   |
++------------+  +-------------------+  +-----------------------+
+|    (1)     |  |        (5)        |  |    (7)         (9)    |
+|   TIPTOP   |  |       TIPTOP      |  |   TIPTOP      TIPTOP  |
+|  End-Host  |  |     Forwarder     |  |  Forwarder   End-Host |
+|     |      |  |         |         |  |      |          |     |
+|    (2)     |  |        (4)        |  |          (8)          |
+| Unmodified |  |     Unmodified    |  |    Onboard Network    |
+|    LAN     |  |    IP Networks    |  |    Unmodified LAN     |
++---------\--+  +-/-------------\---+  +--/--------------------+
+           \     /               \       /
+         (3) WAN/VPN        (6) Relay Satellite
+          Unmodified          or DWE Services
+        </artwork>
+      </figure>
 
-      <t>An example end-to-end command application flow might pass through many nodes, starting within a mission operations center (MOC) at (1) a TIPTOP end-host running command workstation software, and then traversing (2) an unmodified LAN within the MOC, which routes the command packet via (3) an unmodified WAN or VPN connection to a communication service provider (CSP) network.  Within the CSP network, there may be (4) unmodified IP forwarding in other WAN, VPN, and LAN nodes, and (5) a TIPTOP forwarder that queues packets and routes according to schedule via (6) unmodified relay or direct communications services towards the destination spacecraft node.  At the destination spacecraft/vehicle, there may be (7) a TIPTOP forwarder, (8) an unmodified onboard network, and (9) a TIPTOP end-host.</t>
+      <t>An example end-to-end command application flow might pass through many nodes, starting within a mission operations center (MOC) at (1) a TIPTOP end-host running command workstation software, and then traversing (2) an unmodified LAN within the MOC, which routes the command packet via (3) an unmodified WAN or VPN connection to a communication service provider (CSP) network.  Within the CSP network, there may be (4) unmodified IP forwarding in other WAN, VPN, and LAN nodes, and (5) a TIPTOP forwarder that queues packets and routes according to schedule via (6) unmodified relay or Direct-with-Earth (DWE) communications services towards the destination spacecraft node.  At the destination spacecraft/vehicle, there may be (7) a TIPTOP forwarder, (8) an unmodified onboard network, and (9) a TIPTOP end-host.</t>
       <t>Within this example command path, there are 2 TIPTOP end hosts, 2 TIPTOP forwarders, and 5+ unmodified typical Internet stack nodes (since multiple hops can be involved in the several LAN and WAN traversals).  This deep space IP architecture is incrementally deployable.</t>
-      <t>Making the end-to-end example command data flow possible, an orchestration system on Earth can use knowledge of the spacecraft mission and its commanding needs in order to ensure that at proper times there are scheduled communication system resources (antennas, modems, etc.) that are physically pointed, tracking, and otherwise configured to close a forward link to the spacecraft at the required data rate.  The orchestration system can also set scheduled routing table entries for the relevant nodes within the path.</t>
+      <t>Making the end-to-end example command data flow possible, an orchestration system on Earth (shown at the top of <xref target="fig-overview"/>) can use knowledge of the spacecraft mission and its commanding needs in order to ensure that at proper times there are scheduled communication system resources (antennas, modems, etc.) that are physically pointed, tracking, and otherwise configured to close a forward link to the spacecraft at the required data rate.  The orchestration system can also set scheduled routing table entries for the relevant nodes within the path.</t>
     </section>
     <section anchor="layer2">
       <name>Layer 2 in Deep Space</name>
@@ -227,6 +239,7 @@
       the Time To Live (TTL) field of IPv4 was defined based on time
       <xref target="STD5"/>, but it has been effectively implemented
       as a hop count, which was renamed as "Hop Count" in IPv6 <xref target="STD86"/>. Nothing needs to be changed to the IP protocol or its packet format.</t>
+      <t>IPv6 requires a link MTU of at least 1280 octets (Section 5 of <xref target="STD86"/>). On deep space links, IP packets are carried in CCSDS Encapsulation Packets <xref target="IPoverCCSDSSpaceLinks"/>, which may span multiple link layer frames; therefore, deep space links can support typical Internet MTU sizes without an additional fragmentation layer below IP. The considerations for setting the link MTU relative to the frame and codeblock sizes are discussed in <xref target="I-D.ietf-tiptop-usecase" section="2.1.1" sectionFormat="of"/>.</t>
 
       <t>
 	This architecture can support IPv4
@@ -259,12 +272,14 @@
       is not immediately available on-link.
         </t>
         <t>
-	  This queuing may be implemented at layer
-	  2 as currently done by the Mars orbiters, where
-	  frames are stored, regardless of payload type.  In this
+	  This queuing may be implemented below IP, either at layer 1,
+	  as done by some Mars orbiters that store bits without
+	  distinction to frame boundaries ("bag of bits"), or at
+	  layer 2 by storing frames, regardless of payload type (see
+	  <xref target="I-D.ietf-tiptop-usecase" section="6.1" sectionFormat="of"/>).  In this
 	  case, IP packets are unaware of the store-and-forward and no
-	  changes are needed in the IP forwarding function.  The layer 2
-	  network is just behaving as a point-to-point link with a
+	  changes are needed in the IP forwarding function.  The lower
+	  layers are just behaving as a point-to-point link with a
 	  large and variable latency.
 	</t>
         <t>
@@ -361,7 +376,12 @@
         <t>
 	On the surface of celestial bodies and in proximal orbit,
 	traditional protocols are applicable and should be used (e.g.,
-	<xref target="RFC9717"/>).
+	<xref target="RFC9717"/>). For instance, RPL <xref target="RFC6550"/>
+	may be used in constrained surface networks. While designed for
+	low-power and lossy networks, RPL still builds and maintains its
+	topology through control message exchanges between neighbors, and
+	is therefore subject to the same limitations on long-delay or
+	intermittent links as other routing protocols.
       </t>
       <t>
 	Because of bandwidth limitations, the PCE for a domain may
@@ -473,9 +493,13 @@ timers, computed based on round trip time samples <xref target="RFC6298"/>
 measurements within a contact window, and RTTs may vary significantly across
 contact windows, this type of algorithm is not appropriate for interplanetary
 use.  Additionally, default values may be in ranges such as 1 second, that are
-inappropriate for even Earth-lunar paths.  Based on the known propagation times
-for interplanetary paths and predicted contacts, either pre-configured values
-or new algorithms should be used.
+inappropriate for even Earth-lunar paths.  However, an estimate or an upper
+bound of the RTT can be computed in advance, since the propagation delays are
+known from the orbital dynamics of the celestial bodies and spacecraft, and the
+waiting times from the contact schedule
+(<xref target="I-D.ietf-tiptop-usecase" section="5.1" sectionFormat="of"/>).
+Based on the known propagation times for interplanetary paths and predicted
+contacts, either pre-configured values or new algorithms should be used.
 
           </t></li> 
           <li><t>
@@ -656,9 +680,9 @@ incorporate/enable in future interplanetary transport stacks.
       <t>Caching should be used extensively on space networks to maximize local fetching. Preemptive caching by pre-populating caches with data that shall be used locally on the celestial body network shall be done as much as possible to provide better response time on the local celestial body network.</t>
       <t>QPACK <xref target="RFC9204"/> should be considered for higher bandwidth efficiency.</t>
       
-      <section>
+      <section anchor="coap-section">
           <name>CoAP</name>
-          <t>The Constrained Application Protocol (CoAP)<xref target="RFC7252"/> is a specialized web transfer protocol for use with constrained nodes and constrained networks, therefore a candidate for an application protocol for space, similar to HTTP. If considered, proper use of its underlying transport and timers should be looked at as discussed in <xref target="I-D.gomez-tiptop-coap"/>.</t>
+          <t>The Constrained Application Protocol (CoAP)<xref target="RFC7252"/> is a specialized RESTful protocol for use with constrained nodes and constrained networks, therefore a candidate for an application protocol for space, similar to HTTP. If considered, proper use of its underlying transport and timers should be looked at as discussed in <xref target="I-D.gomez-tiptop-coap"/>. Since IP forwarding nodes provide a best effort service (see <xref target="ip"/>), applications requiring reliable delivery should use the CoAP reliability mechanisms, i.e, Confirmable messages, configured as discussed in <xref target="I-D.gomez-tiptop-coap"/>.</t>
       </section>
     </section>
     <section>
@@ -706,6 +730,7 @@ incorporate/enable in future interplanetary transport stacks.
           <t>NETCONF <xref target="RFC6241"/> and RESTCONF <xref target="RFC8040"/> shall be used with proper configuration
               values to avoid timeouts and appropriate transport. NETCONF
               over QUIC transport <xref target="I-D.ietf-netconf-over-quic"/> or RESTCONF over HTTP3 can be configured with appropriate QUIC transport parameters as discussed in <xref target="quic-section"/>.</t>
+          <t>For constrained nodes, CORECONF <xref target="I-D.ietf-core-comi"/>, which accesses YANG-modeled data over CoAP with a CBOR encoding, can be used, with CoAP configured as discussed in <xref target="coap-section"/>.</t>
           <t>Given the non-typical delays in requests and response in space compared to traditional network management frameworks on Internet and private networks, expectations about when configuration changes will be applied and confirmed or the timeliness of the actual value received from a request need to be taken into account. For example, a configuration change may take hours to be received by the spacecraft, which is not expected in typical network operations. A request for some value may take hours to be received by the spacecraft and take hours to be received by the requestor, which means the value may not be current or expired. Moreover, typical timeouts of NETCONF clients should be adjusted to the expected RTT.</t>
           <t>While being declared historic in IETF, SNMP<xref target="RFC1157"/> runs over UDP and has no notion of time. Therefore, with proper configuration of client timeout, it can be used as is to manage nodes and services in deep space.</t>
       </section>
@@ -722,8 +747,9 @@ incorporate/enable in future interplanetary transport stacks.
       Internet. Since no change is made in the protocols, this architecture
       does not bring new security issues on the protocols themselves.</t>
       <t>However, with longer delays and intermittence, deep space networking brings additional considerations. Security designs must tolerate long validation delays and potentially operate in a disconnected trust model.</t>
-      <t>Certificates and keys need to be renewed before their expiration, taking into account the delay to send, receive and confirm. Protocols such as OCSP<xref target="RFC6960"/> providing on-line real-time validation and revocation check will likely not work given the too long delays, therefore certificates need to be validated using local trust anchors.</t>
+      <t>Certificates and keys need to be renewed before their expiration, taking into account the delay to send, receive and confirm. Protocols such as the Online Certificate Status Protocol (OCSP) <xref target="RFC6960"/> providing on-line real-time validation and revocation check will likely not work given the too long delays, therefore certificates need to be validated using local trust anchors.</t>
       <t>The use of long term keys, such as ones set prior to launch, may create exposure, therefore keys should be renewed at appropriate frequency.</t>
+      <t>Pre-shared keys (PSKs) may be useful in deep space: they avoid transmitting certificate chains, which saves bandwidth, and avoid the certificate validation and revocation checking issues discussed above. However, PSKs provisioned prior to launch are long term keys, and the above considerations on long term keys apply.</t>
       <t>Given possible lower frequency of time synchronization, clock drifts may affect expiration and validation.</t>
       <t>Intermediate forwarding nodes may buffer packets for a significant time. While it is presumed that most IP packet payloads will be encrypted by IP or transport security, data-at-rest becomes a possible exposure. If the intermediate node is compromised, the data-at-rest becomes available for the bad actor. This is new and not expected on terrestrial Internet intermediate nodes. </t>
       <t>Several forms of denial of service attack are possible, if malicious traffic can be injected into the network.  These are similar to attacks used on the Internet, but may have more severe consequences in deep space settings.  As a mitigation, aggressive ingress filtering may be expected to protect deep space networks.  Some threats include:</t>
@@ -760,6 +786,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4838.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6241.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6298.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6550.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6960.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7020.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7252.xml"/>
@@ -779,6 +806,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml9/reference.STD.0005.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml9/reference.STD.0086.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.blanchet-tvr-forwarding.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-core-comi.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-masque-quic-proxy.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-netconf-over-quic.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-schc-architecture.xml"/>
@@ -911,7 +939,7 @@ incorporate/enable in future interplanetary transport stacks.
             </author>
           </front>
         </reference>
-        <reference anchor="ntn6g3gpp" target="hhttps://www.3gpp.org/technologies/ntn-overview">
+        <reference anchor="ntn6g3gpp" target="https://www.3gpp.org/technologies/ntn-overview">
           <front>
             <title>Non-Terrestrial Networks (NTN)</title>
             <author>
@@ -936,7 +964,7 @@ incorporate/enable in future interplanetary transport stacks.
     <section anchor="Acknowledgements" numbered="false">
       <name>Acknowledgements</name>
       <t>This work started by reassessing the use of the whole IP stack in the context of deep space discussed in <xref target="I-D.many-deepspace-ip-assessment"/> where early contributors are acknowledged.</t>
-      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padma Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu, and John Curran.</t>
+      <t>This document and its underlying work has been reviewed and discussed by many, who have provided valuable feedback and comments, including disagreements, and made an overall more solid document. These people are, in no specific order: Padma Pillay-Esnault, Marius Feldmann, Britta Hale, Carles Gomez Montenegro, Meiling Chen, Marshall Eubanks, Eric Rescorla, Johnson Liu, John Curran, and Martine Lenders.</t>
     </section>
   </back>
 </rfc>
