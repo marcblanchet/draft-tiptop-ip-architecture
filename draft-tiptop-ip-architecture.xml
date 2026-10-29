@@ -732,7 +732,7 @@ incorporate/enable in future interplanetary transport stacks.
               over QUIC transport <xref target="I-D.ietf-netconf-over-quic"/> or RESTCONF over HTTP3 can be configured with appropriate QUIC transport parameters as discussed in <xref target="quic-section"/>.</t>
           <t>For constrained nodes, CORECONF <xref target="I-D.ietf-core-comi"/>, which accesses YANG-modeled data over CoAP with a CBOR encoding, can be used, with CoAP configured as discussed in <xref target="coap-section"/>.</t>
           <t>Given the non-typical delays in requests and response in space compared to traditional network management frameworks on Internet and private networks, expectations about when configuration changes will be applied and confirmed or the timeliness of the actual value received from a request need to be taken into account. For example, a configuration change may take hours to be received by the spacecraft, which is not expected in typical network operations. A request for some value may take hours to be received by the spacecraft and take hours to be received by the requestor, which means the value may not be current or expired. Moreover, typical timeouts of NETCONF clients should be adjusted to the expected RTT.</t>
-          <t>While being declared historic in IETF, SNMP<xref target="RFC1157"/> runs over UDP and has no notion of time. Therefore, with proper configuration of client timeout, it can be used as is to manage nodes and services in deep space.</t>
+          <t>SNMP <xref target="RFC3410"/> runs over UDP and can also be used to manage nodes and services in deep space. Manager timeout and retransmission settings must be adjusted to the expected RTT. Depending on the SNMP version and security model, additional configuration or changes may be needed, such as widening the SNMPv3 User-based Security Model timeliness window or scaling the DTLS retransmission timers of the Transport Security Model. <xref target="I-D.many-tiptop-snmp-profile"/> defines an SNMP profile for deep space, describing these requirements and their applicability to the deep space connectivity scenarios.</t>
       </section>
     </section>
     <section anchor="IANA">
@@ -776,10 +776,10 @@ incorporate/enable in future interplanetary transport stacks.
       <references>
         <name>Informative References</name>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.768.xml"/>
-        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.1157.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2488.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2760.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3135.xml"/>
+        <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3410.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4271.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4340.xml"/>
         <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4655.xml"/>
@@ -818,6 +818,7 @@ incorporate/enable in future interplanetary transport stacks.
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-quic-profile.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.gomez-tiptop-coap.xml"/>
         <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-dns.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.many-tiptop-snmp-profile.xml"/>
         <reference anchor="IPoverCCSDSSpaceLinks" target="https://public.ccsds.org/Pubs/702x1b1c2.pdf">
           <front>
             <title>IP OVER CCSDS SPACE LINKS, Blue Book 702</title>
