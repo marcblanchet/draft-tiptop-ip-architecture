@@ -755,6 +755,9 @@ incorporate/enable in future interplanetary transport stacks.
     </section>
     <section anchor="Security">
       <name>Security Considerations</name>
+
+      <t>Space mission protection and cybersecurity policies vary around the world, and between different organizations. As an example, policies such as NASA-STD-1006 and CNSSP 12 are applicable to some US systems, and include policies without regard to the specific communications system technologies in-use. The same guidance is applicable for any networking stack, not just IP, and the same types of threats described below apply in common to other types of protocols (not specifically only to IP) if those protocols are capable of multi-hop routing, buffering, scaling, and other properties of IP.</t>
+
       <t>Using the current IP protocol stack in deep space inherits
       all the work on privacy, cryptography, key management,
       firewalls, and scrutiny of protocols that are deployed on the
